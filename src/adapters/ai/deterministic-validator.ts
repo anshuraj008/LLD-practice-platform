@@ -12,7 +12,7 @@ export class DeterministicSubmissionValidator implements SubmissionValidator {
       issues.push({
         field: 'assumptions',
         message: 'Assumptions should be specific and clearly state system scope or boundaries.',
-        severity: 'warning',
+          severity: 'error',
       });
     }
 
@@ -37,7 +37,7 @@ export class DeterministicSubmissionValidator implements SubmissionValidator {
           issues.push({
             field: 'classes',
             message: `Duplicate class '${trimmedName}' defined. Class names must be unique.`,
-            severity: 'warning',
+            severity: 'error',
           });
         }
         classNames.add(trimmedName.toLowerCase());
@@ -57,7 +57,7 @@ export class DeterministicSubmissionValidator implements SubmissionValidator {
       issues.push({
         field: 'relationships',
         message: 'Describe how core classes interact, inherit, or compose with each other.',
-        severity: 'warning',
+          severity: 'error',
       });
     }
 
@@ -66,7 +66,7 @@ export class DeterministicSubmissionValidator implements SubmissionValidator {
       issues.push({
         field: 'mainFlow',
         message: 'Provide a step-by-step walkthrough of the primary user or system interaction flow.',
-        severity: 'warning',
+          severity: 'error',
       });
     }
 
@@ -75,7 +75,7 @@ export class DeterministicSubmissionValidator implements SubmissionValidator {
       issues.push({
         field: 'edgeCases',
         message: 'Specify boundary conditions, concurrency handling, or failure modes.',
-        severity: 'warning',
+          severity: 'error',
       });
     }
 
@@ -84,7 +84,7 @@ export class DeterministicSubmissionValidator implements SubmissionValidator {
       issues.push({
         field: 'tradeOffs',
         message: 'Explain design trade-offs, alternative approaches considered, and extensibility points.',
-        severity: 'warning',
+          severity: 'error',
       });
     }
 

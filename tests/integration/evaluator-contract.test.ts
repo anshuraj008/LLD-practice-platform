@@ -90,9 +90,7 @@ describe('Evaluator Contract & Prompt Injection Isolation', () => {
 
     const issues = validator.validate(invalidPayload, mockProblem);
     const errors = issues.filter((i) => i.severity === 'error');
-    const warnings = issues.filter((i) => i.severity === 'warning');
-
     expect(errors.some((e) => e.message.includes('responsibility statement'))).toBe(true);
-    expect(warnings.some((w) => w.message.includes('Duplicate class'))).toBe(true);
+    expect(errors.some((e) => e.message.includes('Duplicate class'))).toBe(true);
   });
 });

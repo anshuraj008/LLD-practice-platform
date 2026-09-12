@@ -23,6 +23,7 @@ import { ClassListEditor, ClassItem } from './ClassListEditor';
 import { SubmitModal } from './SubmitModal';
 import { AttemptDraft } from '@/domain/types/attempt';
 import { Problem } from '@/domain/types/problem';
+import { SUBMISSION_REQUIREMENTS } from '@/lib/submission-requirements';
 
 interface PracticeShellProps {
   attemptId: string;
@@ -174,37 +175,38 @@ export function PracticeShell({
       id: 'assumptions',
       label: '1. Assumptions',
       icon: FileText,
-      isFilled: draft.assumptions.trim().length >= 15,
+      isFilled: draft.assumptions.trim().length >= SUBMISSION_REQUIREMENTS.assumptionsMinLength,
     },
     {
       id: 'classes',
       label: '2. Classes & SRP',
       icon: Boxes,
-      isFilled: draft.classes.length >= 2,
+      isFilled: draft.classes.length >= SUBMISSION_REQUIREMENTS.minimumClasses &&
+        draft.classes.every((item) => item.responsibility.trim().length >= SUBMISSION_REQUIREMENTS.responsibilityMinLength),
     },
     {
       id: 'relationships',
       label: '3. Relationships',
       icon: Network,
-      isFilled: draft.relationships.trim().length >= 15,
+      isFilled: draft.relationships.trim().length >= SUBMISSION_REQUIREMENTS.relationshipsMinLength,
     },
     {
       id: 'mainFlow',
       label: '4. Main Flow',
       icon: Workflow,
-      isFilled: draft.mainFlow.trim().length >= 20,
+      isFilled: draft.mainFlow.trim().length >= SUBMISSION_REQUIREMENTS.mainFlowMinLength,
     },
     {
       id: 'edgeCases',
       label: '5. Edge Cases',
       icon: ShieldCheck,
-      isFilled: draft.edgeCases.trim().length >= 15,
+      isFilled: draft.edgeCases.trim().length >= SUBMISSION_REQUIREMENTS.edgeCasesMinLength,
     },
     {
       id: 'tradeOffs',
       label: '6. Trade-offs',
       icon: Scale,
-      isFilled: draft.tradeOffs.trim().length >= 15,
+      isFilled: draft.tradeOffs.trim().length >= SUBMISSION_REQUIREMENTS.tradeOffsMinLength,
     },
   ];
 

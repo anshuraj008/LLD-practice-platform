@@ -134,13 +134,13 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
           <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
             <span className="text-[11px] font-medium text-slate-400">Average Score</span>
             <p className="text-2xl font-black text-emerald-400">
-              {initialHistory.averageScore}%
+              {initialHistory.averageScore === null ? 'N/A' : `${initialHistory.averageScore}%`}
             </p>
           </div>
           <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
             <span className="text-[11px] font-medium text-slate-400">Highest Score</span>
             <p className="text-2xl font-black text-amber-400">
-              {initialHistory.highestScore}%
+              {initialHistory.highestScore === null ? 'N/A' : `${initialHistory.highestScore}%`}
             </p>
           </div>
         </div>

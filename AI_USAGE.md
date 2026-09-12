@@ -10,6 +10,8 @@ This document transparently documents how AI was utilized, provider selections, 
 >
 > **Rationale**: Adding multiple LLM providers or complex client-side provider switchers adds accidental complexity and secret leakage risks without improving the core learner loop. Instead, the architecture encapsulates all AI evaluation behind a provider-neutral `Evaluator` interface (`GeminiEvaluator`, `MockEvaluator`, `HybridEvaluator`), allowing future evaluator implementations to remain clean, additive changes.
 
+When `GEMINI_API_KEY` is configured, provider errors remain visible as a failed evaluation so the saved submission can be retried. When no key is configured, the application uses `MockEvaluator` as an explicit offline development path. The opt-in live contract is covered by `tests/integration/gemini-live.test.ts`.
+
 ---
 
 ## 2. Key Architectural Decisions (Accepted vs. Rejected)
@@ -37,4 +39,4 @@ This document transparently documents how AI was utilized, provider selections, 
 ### Decision 5: Prompt Injection Isolation Delimiters
 - **AI Suggestion**: Inject the learner's raw text directly into the system instructions prompt.
 - **Decision**: **ACCEPTED & REFINED**.
-- **Reasoning**: Learner text is untrusted user input. We isolate the submission inside explicit `<learner_submission>...</learner_submission>` delimiters and instruct the model explicitly to treat it purely as passive passive data and ignore any system prompt override attempts.
+- **Reasoning**: Learner text is untrusted user input. We isolate the submission inside explicit `<learner_submission>...</learner_submission>` delimiters and instruct the model explicitly to treat it purely as passive data and ignore any system prompt override attempts.

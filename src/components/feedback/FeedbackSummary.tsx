@@ -19,6 +19,7 @@ export function FeedbackSummary({
 }: FeedbackSummaryProps) {
   const scoreColors = getScoreColor(overallScore);
   const score = overallScore ?? 0;
+  const hasScore = typeof overallScore === 'number';
 
   // Calculate SVG circular stroke offset for radius 38 (circumference ~ 238.76)
   const radius = 38;
@@ -60,8 +61,10 @@ export function FeedbackSummary({
             </div>
           </div>
 
-          <div className="mt-2 text-[11px] font-medium text-slate-400 text-center">
-            {score >= 85
+            <div className="mt-2 text-[11px] font-medium text-slate-400 text-center">
+              {!hasScore
+                ? 'Evaluation score unavailable'
+                : score >= 85
               ? '🌟 Production Ready'
               : score >= 70
               ? '👍 Solid Architecture'

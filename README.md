@@ -7,7 +7,7 @@ A production-grade, highly focused learner practice platform for **Low-Level Des
 ## 🎯 Problem Statement & Learner Journey
 
 Traditional platforms for software engineering preparation focus heavily on algorithmic problems with binary pass/fail test cases. However, Low-Level Design (LLD) is inherently open-ended with multiple valid architectural choices. Learners struggle with:
-1. Lack of objective, evidence-backed feedback on class responsibilities, coupling, and design patterns.
+1. Lack of consistent, evidence-backed feedback on class responsibilities, coupling, and design patterns.
 2. Inability to visualize iterative architectural improvement between attempts.
 3. Overly complex LMS platforms that obscure the core practice loop.
 
@@ -25,7 +25,7 @@ Choose Problem ──► Author Structured Design ──► Submit Idempotently 
 - **Styling & UI**: Tailwind CSS + Custom Dark Slate Glassmorphism Design System + Lucide Icons
 - **Validation**: Zod (unified schema contract for API requests, drafts, and LLM output)
 - **Database & Storage**: Relational in-memory transactional database with atomic disk persistence (`data/database.json`), ACID submit transactions, and foreign key relations
-- **AI Evaluation**: Google Gemini (`@google/generative-ai` with `gemini-1.5-flash`) via Google AI Studio API key + high-fidelity deterministic offline fallback
+- **AI Evaluation**: Google Gemini (`@google/generative-ai` with `gemini-3.1-flash-lite`) via Google AI Studio API key, with a deterministic mock path when no key is configured
 - **Testing**: Vitest 3.0 (Unit, Domain State Machines, Integration, and Evaluator Contract suites)
 
 ---
@@ -116,6 +116,11 @@ npm run test
 Typecheck verification:
 ```bash
 npm run typecheck
+```
+
+With `GEMINI_API_KEY` configured, run the live provider contract check:
+```bash
+npx vitest run tests/integration/gemini-live.test.ts
 ```
 
 ---

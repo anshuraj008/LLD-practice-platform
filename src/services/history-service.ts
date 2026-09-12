@@ -22,8 +22,8 @@ export interface UserHistoryOverview {
   attempts: HistoryAttemptItem[];
   totalAttempts: number;
   completedSubmissions: number;
-  averageScore: number;
-  highestScore: number;
+  averageScore: number | null;
+  highestScore: number | null;
   recurringWeaknesses: Array<{
     criterionId: RubricCriterionId;
     criterionName: string;
@@ -147,8 +147,8 @@ export class HistoryService {
       (h) => h.overallScore !== undefined && h.overallScore !== null
     );
     const totalScoreSum = completedEvals.reduce((sum, h) => sum + (h.overallScore || 0), 0);
-    const averageScore = completedEvals.length > 0 ? Math.round(totalScoreSum / completedEvals.length) : 0;
-    const highestScore = completedEvals.length > 0 ? Math.max(...completedEvals.map((h) => h.overallScore || 0)) : 0;
+    const averageScore = completedEvals.length > 0 ? Math.round(totalScoreSum / completedEvals.length) : null;
+    const highestScore = completedEvals.length > 0 ? Math.max(...completedEvals.map((h) => h.overallScore as number)) : null;
 
     // Build recurring weaknesses (criteria with lowest average scores)
     const recurringWeaknesses = Object.entries(weaknessTracker)

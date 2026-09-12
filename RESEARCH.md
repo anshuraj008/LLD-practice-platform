@@ -31,7 +31,7 @@ Unlike Data Structures & Algorithms (DSA), Low-Level Design:
 Existing platforms either **show you the answer** (passive tutorials) or **make you write hundreds of lines of code** (heavy code execution). 
 
 **The Unmet Need**: A lightweight, deliberate practice platform centered around a tight loop:
-$$\text{Choose Problem} \longrightarrow \text{Author Structured Architecture} \longrightarrow \text{Receive Objective Evidence-Backed Rubric Feedback} \longrightarrow \text{Iterate \& Compare}$$
+$$\text{Choose Problem} \longrightarrow \text{Author Structured Architecture} \longrightarrow \text{Receive Evidence-Backed Rubric Feedback} \longrightarrow \text{Iterate \& Compare}$$
 
 ---
 

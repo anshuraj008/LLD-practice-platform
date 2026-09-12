@@ -35,7 +35,7 @@ The domain model retains learner ownership so real authentication can be added w
 | **`Submission`** | Immutable snapshot of an attempt at a specific timestamp, content hash, UUID idempotency key. | Mutable editor state or autosave drafts. |
 | **`Rubric`** | Ordered collection of criteria, percentage weights, evaluation guidelines, max scores. | Provider-specific AI prompt formulations. |
 | **`Evaluation`** | Evaluation state machine (`QUEUED` $\to$ `EVALUATING` $\to$ `COMPLETED`/`FAILED`), retry counter, normalized score. | Submission mutations. |
-| **`FeedbackItem`** | Single criterion score (0-5), cited direct evidence quotes, identified concerns, actionable suggestions, confidence score. | Overall submission workflow. |
+| **`FeedbackItem`** | Single criterion score (0-5), cited direct evidence quotes, criterion strength, identified concerns, actionable suggestions, confidence score. | Overall submission workflow. |
 
 ---
 
@@ -78,6 +78,7 @@ The domain model retains learner ownership so real authentication can be added w
 - Direct jumps (e.g. `QUEUED` $\to$ `COMPLETED`) throw `EvaluationLifecycleError`.
 - Only `FAILED` evaluations can transition to `QUEUED` upon explicit retry.
 - Retries are strictly capped at `MAX_EVALUATION_RETRIES = 3`.
+- A provider failure transitions the evaluation to `FAILED` without deleting the immutable submission snapshot.
 
 ---
 

@@ -25,17 +25,13 @@ export class HybridEvaluator implements Evaluator {
       );
     }
 
-    // 2. Invoke Gemini AI Evaluator (or fallback gracefully to MockEvaluator if no API key is provided)
+    // 2. Use Gemini when configured. Provider failures must remain visible to the
+    // evaluation lifecycle so the saved submission can be retried explicitly.
     if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim().length > 0) {
-      try {
-        return await this.geminiEvaluator.evaluate(input);
-      } catch (geminiErr) {
-        console.warn('Gemini evaluation failed, falling back to mock evaluator:', geminiErr);
-        // If Gemini fails (e.g. rate limit / network error in demo), fallback to high-fidelity mock
-        return await this.mockEvaluator.evaluate(input);
-      }
+      return await this.geminiEvaluator.evaluate(input);
     }
 
+    // Deliberate offline development path when no provider key is configured.
     return await this.mockEvaluator.evaluate(input);
   }
 }
