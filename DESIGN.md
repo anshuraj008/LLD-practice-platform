@@ -19,6 +19,11 @@ Instead of requiring learners to submit full executable code, unstructured raw t
 - **Evidence-Based Evaluation**: Structured sections provide direct textual evidence for the evaluator to cite, eliminating hallucinations and ensuring explainability.
 - **Variation Point Isolation**: Classes and responsibilities are isolated as distinct data structures, enabling deterministic count and uniqueness checks before invoking AI.
 
+### Authentication Scope
+Authentication was intentionally excluded from the 2-day MVP because it does not improve the core LLD practice loop.
+
+The domain model retains learner ownership so real authentication can be added without redesigning `Attempt` or `Evaluation`.
+
 ---
 
 ## 2. Core Entities & Boundary Responsibilities
