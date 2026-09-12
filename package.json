@@ -11,10 +11,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:seed": "tsx src/adapters/db/seed.ts"
+    "db:seed": "tsx --env-file=.env src/adapters/db/seed.ts",
+    "db:push": "tsx --env-file=.env src/adapters/db/push-schema.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
+    "@neondatabase/serverless": "^1.1.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
     "next": "^15.1.7",
