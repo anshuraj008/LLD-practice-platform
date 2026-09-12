@@ -3,13 +3,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Layers,
   Send,
-  Sparkles,
   BookOpen,
   ChevronLeft,
   ChevronRight,
-  HelpCircle,
   FileText,
   Boxes,
   Network,
@@ -17,13 +14,18 @@ import {
   ShieldCheck,
   Scale,
   CheckCircle2,
+  Check,
 } from 'lucide-react';
 import { AutosaveStatus, SaveState } from './AutosaveStatus';
 import { ClassListEditor, ClassItem } from './ClassListEditor';
 import { SubmitModal } from './SubmitModal';
 import { AttemptDraft } from '@/domain/types/attempt';
 import { Problem } from '@/domain/types/problem';
-import { SUBMISSION_REQUIREMENTS } from '@/lib/submission-requirements';
+import {
+  SUBMISSION_REQUIREMENTS,
+  countCompletedDesignSections,
+  getDesignSectionCompletion,
+} from '@/lib/submission-requirements';
 
 interface PracticeShellProps {
   attemptId: string;
@@ -64,6 +66,8 @@ export function PracticeShell({
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isDirtyRef = useRef(false);
+  const draftRef = useRef(draft);
+  draftRef.current = draft;
 
   // Perform debounced autosave (800ms)
   const syncDraftToServer = useCallback(
@@ -92,24 +96,22 @@ export function PracticeShell({
     [attemptId, isSubmitted]
   );
 
-  const handleFieldChange = (field: keyof AttemptDraft, value: any) => {
+  const handleFieldChange = (field: keyof AttemptDraft, value: AttemptDraft[keyof AttemptDraft]) => {
     if (isSubmitted) return;
 
-    setDraft((prev) => {
-      const next = { ...prev, [field]: value };
-      isDirtyRef.current = true;
-      setSaveStatus('unsaved');
+    const next = { ...draftRef.current, [field]: value };
+    draftRef.current = next;
+    setDraft(next);
+    isDirtyRef.current = true;
+    setSaveStatus('unsaved');
 
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
 
-      debounceTimerRef.current = setTimeout(() => {
-        syncDraftToServer(next);
-      }, 800);
-
-      return next;
-    });
+    debounceTimerRef.current = setTimeout(() => {
+      void syncDraftToServer(draftRef.current);
+    }, 800);
   };
 
   // Clean up timer on unmount
@@ -165,52 +167,22 @@ export function PracticeShell({
     }
   };
 
+  const sectionCompletion = getDesignSectionCompletion(draft);
+  const completedTabsCount = countCompletedDesignSections(draft);
+
   const tabs: Array<{
     id: EditorTab;
     label: string;
-    icon: any;
-    isFilled: boolean;
+    shortLabel: string;
+    icon: typeof FileText;
   }> = [
-    {
-      id: 'assumptions',
-      label: '1. Assumptions',
-      icon: FileText,
-      isFilled: draft.assumptions.trim().length >= SUBMISSION_REQUIREMENTS.assumptionsMinLength,
-    },
-    {
-      id: 'classes',
-      label: '2. Classes & SRP',
-      icon: Boxes,
-      isFilled: draft.classes.length >= SUBMISSION_REQUIREMENTS.minimumClasses &&
-        draft.classes.every((item) => item.responsibility.trim().length >= SUBMISSION_REQUIREMENTS.responsibilityMinLength),
-    },
-    {
-      id: 'relationships',
-      label: '3. Relationships',
-      icon: Network,
-      isFilled: draft.relationships.trim().length >= SUBMISSION_REQUIREMENTS.relationshipsMinLength,
-    },
-    {
-      id: 'mainFlow',
-      label: '4. Main Flow',
-      icon: Workflow,
-      isFilled: draft.mainFlow.trim().length >= SUBMISSION_REQUIREMENTS.mainFlowMinLength,
-    },
-    {
-      id: 'edgeCases',
-      label: '5. Edge Cases',
-      icon: ShieldCheck,
-      isFilled: draft.edgeCases.trim().length >= SUBMISSION_REQUIREMENTS.edgeCasesMinLength,
-    },
-    {
-      id: 'tradeOffs',
-      label: '6. Trade-offs',
-      icon: Scale,
-      isFilled: draft.tradeOffs.trim().length >= SUBMISSION_REQUIREMENTS.tradeOffsMinLength,
-    },
+    { id: 'assumptions', label: '1. Assumptions', shortLabel: 'Assumptions', icon: FileText },
+    { id: 'classes', label: '2. Classes & SRP', shortLabel: 'Classes', icon: Boxes },
+    { id: 'relationships', label: '3. Relationships', shortLabel: 'Relations', icon: Network },
+    { id: 'mainFlow', label: '4. Main Flow', shortLabel: 'Main Flow', icon: Workflow },
+    { id: 'edgeCases', label: '5. Edge Cases', shortLabel: 'Edge Cases', icon: ShieldCheck },
+    { id: 'tradeOffs', label: '6. Trade-offs', shortLabel: 'Trade-offs', icon: Scale },
   ];
-
-  const completedTabsCount = tabs.filter((t) => t.isFilled).length;
 
   return (
     <div className="space-y-4">
@@ -226,14 +198,14 @@ export function PracticeShell({
             <span>{isProblemCollapsed ? 'Show Problem' : 'Hide Problem'}</span>
           </button>
 
-          <div>
-            <h2 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-              <span>{problem.title}</span>
+          <div className="min-w-0">
+            <h2 className="text-sm font-bold text-slate-100 flex flex-wrap items-center gap-2">
+              <span className="truncate">{problem.title}</span>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                 {problem.difficulty}
               </span>
             </h2>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-400" aria-live="polite">
               {completedTabsCount} of 6 design sections completed
             </p>
           </div>
@@ -271,49 +243,27 @@ export function PracticeShell({
         </div>
       )}
 
+      {/* Mobile / tablet: problem context drawer so the editor stays first */}
+      <details className="lg:hidden rounded-2xl bg-slate-900/80 border border-slate-800">
+        <summary className="flex cursor-pointer items-center justify-between gap-3 px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-300">
+          <span className="flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-blue-400" />
+            Problem context
+          </span>
+          <span className="text-[10px] font-medium normal-case text-slate-400">Tap to read</span>
+        </summary>
+        <div className="px-4 pb-4">
+          <ProblemContextBody problem={problem} />
+        </div>
+      </details>
+
       {/* Main Split Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Problem Rail (35% on Desktop when expanded) */}
+        {/* Left Column: Problem Rail — desktop only */}
         {!isProblemCollapsed && (
-          <div className="lg:col-span-4 space-y-4">
-            <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 space-y-4 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-                <BookOpen className="w-4 h-4 text-blue-400" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                  Problem Context
-                </h3>
-              </div>
-
-              <p className="text-xs text-slate-300 leading-relaxed">{problem.description}</p>
-
-              {/* Requirements */}
-              <div className="space-y-2.5 pt-2">
-                <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Requirements & Constraints
-                </h4>
-                <div className="space-y-2">
-                  {problem.requirements.map((r) => (
-                    <div
-                      key={r.id}
-                      className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-850 text-xs space-y-1"
-                    >
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-blue-400">
-                        {r.category}
-                      </span>
-                      <p className="text-slate-300 text-[11px] leading-relaxed">{r.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Rubric Weights Reminder */}
-              <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 text-[11px] text-slate-400 space-y-1.5">
-                <p className="font-semibold text-slate-300">💡 Evaluation Reminder:</p>
-                <p>
-                  Avoid monolithic God classes. Decouple algorithms via Strategy/Interface abstractions,
-                  and consider concurrency edge cases.
-                </p>
-              </div>
+          <div className="hidden lg:block lg:col-span-4 space-y-4">
+            <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+              <ProblemContextBody problem={problem} />
             </div>
           </div>
         )}
@@ -322,27 +272,31 @@ export function PracticeShell({
         <div className={isProblemCollapsed ? 'lg:col-span-12 space-y-4' : 'lg:col-span-8 space-y-4'}>
           <div className="rounded-2xl bg-slate-900/90 border border-slate-800 overflow-hidden shadow-xl">
             {/* Section Tab Bar */}
-            <div className="flex items-center overflow-x-auto border-b border-slate-800 bg-slate-950/60 p-1.5 gap-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:flex xl:overflow-x-auto border-b border-slate-800 bg-slate-950/60 p-1.5 gap-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
+                const isFilled = sectionCompletion[tab.id];
                 return (
                   <button
                     key={tab.id}
+                    type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
+                    className={`flex items-center justify-center xl:justify-start gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
                       isActive
                         ? 'bg-blue-600 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850'
+                        : isFilled
+                        ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 hover:bg-emerald-500/15'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                     }`}
                   >
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{tab.label}</span>
-                    {tab.isFilled && (
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          isActive ? 'bg-white' : 'bg-emerald-400'
-                        }`}
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
+                    <span className="hidden xl:inline">{tab.label}</span>
+                    <span className="xl:hidden">{tab.shortLabel}</span>
+                    {isFilled && (
+                      <Check
+                        className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-emerald-400'}`}
+                        aria-label="Section complete"
                       />
                     )}
                   </button>
@@ -372,6 +326,11 @@ export function PracticeShell({
                     rows={12}
                     className="w-full text-xs text-slate-200 bg-slate-950 rounded-xl border border-slate-800 p-4 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 leading-relaxed font-mono"
                   />
+                  <SectionCharProgress
+                    value={draft.assumptions}
+                    min={SUBMISSION_REQUIREMENTS.assumptionsMinLength}
+                    complete={sectionCompletion.assumptions}
+                  />
                 </div>
               )}
 
@@ -392,6 +351,11 @@ export function PracticeShell({
                     disabled={isSubmitted}
                     onChange={(updatedClasses: ClassItem[]) => handleFieldChange('classes', updatedClasses)}
                   />
+                  <p className={`text-[11px] ${sectionCompletion.classes ? 'text-emerald-400' : 'text-slate-500'}`}>
+                    {sectionCompletion.classes
+                      ? 'Section complete'
+                      : `${draft.classes.filter((c) => c.name.trim()).length} / ${SUBMISSION_REQUIREMENTS.minimumClasses} named classes with responsibilities`}
+                  </p>
                 </div>
               )}
 
@@ -411,9 +375,12 @@ export function PracticeShell({
                     value={draft.relationships}
                     disabled={isSubmitted}
                     onChange={(e) => handleFieldChange('relationships', e.target.value)}
-                    placeholder="e.g. ParkingLot aggregate root has-many ParkingFloors and Gates. EntryGate depends on SpotAssignmentStrategy interface. Spot state is encapsulated behind assignVehicle() and vacate() methods..."
-                    rows={12}
                     className="w-full text-xs text-slate-200 bg-slate-950 rounded-xl border border-slate-800 p-4 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 leading-relaxed font-mono"
+                  />
+                  <SectionCharProgress
+                    value={draft.relationships}
+                    min={SUBMISSION_REQUIREMENTS.relationshipsMinLength}
+                    complete={sectionCompletion.relationships}
                   />
                 </div>
               )}
@@ -434,9 +401,12 @@ export function PracticeShell({
                     value={draft.mainFlow}
                     disabled={isSubmitted}
                     onChange={(e) => handleFieldChange('mainFlow', e.target.value)}
-                    placeholder="1. Vehicle arrives at EntryGate sensor.\n2. EntryGate queries SpotAssignmentStrategy for best available spot.\n3. Spot is atomically reserved; immutable Ticket is issued.\n4. On exit, Ticket is presented to ExitGate; FeeCalculationStrategy computes amount; Payment processed; Spot vacated."
-                    rows={12}
                     className="w-full text-xs text-slate-200 bg-slate-950 rounded-xl border border-slate-800 p-4 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 leading-relaxed font-mono"
+                  />
+                  <SectionCharProgress
+                    value={draft.mainFlow}
+                    min={SUBMISSION_REQUIREMENTS.mainFlowMinLength}
+                    complete={sectionCompletion.mainFlow}
                   />
                 </div>
               )}
@@ -457,9 +427,12 @@ export function PracticeShell({
                     value={draft.edgeCases}
                     disabled={isSubmitted}
                     onChange={(e) => handleFieldChange('edgeCases', e.target.value)}
-                    placeholder="1. Concurrency: Synchronized / atomic CAS lock on ParkingSpot allocation to prevent race conditions when two gates admit vehicles simultaneously.\n2. Lost Ticket: Fallback to MaxDailyFeeStrategy.\n3. Capacity full: Entry gate blocks barrier and returns ParkingLotFullException."
-                    rows={12}
                     className="w-full text-xs text-slate-200 bg-slate-950 rounded-xl border border-slate-800 p-4 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 leading-relaxed font-mono"
+                  />
+                  <SectionCharProgress
+                    value={draft.edgeCases}
+                    min={SUBMISSION_REQUIREMENTS.edgeCasesMinLength}
+                    complete={sectionCompletion.edgeCases}
                   />
                 </div>
               )}
@@ -480,9 +453,12 @@ export function PracticeShell({
                     value={draft.tradeOffs}
                     disabled={isSubmitted}
                     onChange={(e) => handleFieldChange('tradeOffs', e.target.value)}
-                    placeholder="Applied Strategy Pattern for fee calculation and spot assignment to adhere to Open/Closed Principle. Chose synchronous in-memory payment adapter rather than distributed event bus to keep domain bounded and testable."
-                    rows={12}
                     className="w-full text-xs text-slate-200 bg-slate-950 rounded-xl border border-slate-800 p-4 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 leading-relaxed font-mono"
+                  />
+                  <SectionCharProgress
+                    value={draft.tradeOffs}
+                    min={SUBMISSION_REQUIREMENTS.tradeOffsMinLength}
+                    complete={sectionCompletion.tradeOffs}
                   />
                 </div>
               )}
@@ -527,5 +503,62 @@ export function PracticeShell({
         onConfirm={handleFinalSubmit}
       />
     </div>
+  );
+}
+
+function ProblemContextBody({ problem }: { problem: Problem }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+        <BookOpen className="w-4 h-4 text-blue-400" />
+        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">Problem Context</h3>
+      </div>
+
+      <p className="text-xs text-slate-300 leading-relaxed">{problem.description}</p>
+
+      <div className="space-y-2.5 pt-2">
+        <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+          Requirements & Constraints
+        </h4>
+        <div className="space-y-2">
+          {problem.requirements.map((requirement) => (
+            <div
+              key={requirement.id}
+              className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs space-y-1"
+            >
+              <span className="text-[9px] font-bold uppercase tracking-wider text-blue-400">
+                {requirement.category}
+              </span>
+              <p className="text-slate-300 text-[11px] leading-relaxed">{requirement.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 text-[11px] text-slate-400 space-y-1.5">
+        <p className="font-semibold text-slate-300">Evaluation reminder</p>
+        <p>
+          Avoid monolithic God classes. Decouple algorithms via Strategy/Interface abstractions, and
+          consider concurrency edge cases.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function SectionCharProgress({
+  value,
+  min,
+  complete,
+}: {
+  value: string;
+  min: number;
+  complete: boolean;
+}) {
+  const count = value.trim().length;
+  return (
+    <p className={`text-[11px] ${complete ? 'text-emerald-400' : 'text-slate-500'}`} aria-live="polite">
+      {complete ? 'Section complete' : `${count} / ${min} characters`}
+    </p>
   );
 }

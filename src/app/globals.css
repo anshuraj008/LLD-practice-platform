@@ -63,3 +63,19 @@ body {
 .glow-subtle {
   box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.15);
 }
+
+.card-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}

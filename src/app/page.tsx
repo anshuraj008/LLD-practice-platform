@@ -128,7 +128,7 @@ export default async function HomePage() {
       </div>
 
       {/* Problem Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
         {problemsWithMeta.map((problem) => (
           <ProblemCard key={problem.id} problem={problem} />
         ))}

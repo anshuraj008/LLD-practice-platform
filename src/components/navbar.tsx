@@ -40,6 +40,14 @@ export function Navbar() {
     { href: '/history', label: 'Learning History', icon: History },
   ];
 
+  const activeUser = DEMO_USERS.find((user) => user.id === currentUser) ?? DEMO_USERS[0];
+  const initials = activeUser.name
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
@@ -111,16 +119,16 @@ export function Navbar() {
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/70 hover:border-slate-600 text-xs text-slate-300 transition-colors"
             >
               <div className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-semibold text-[10px]">
-                D
+                {initials}
               </div>
-              <span className="font-medium text-slate-200">Demo Learner</span>
+              <span className="font-medium text-slate-200 max-w-[9rem] truncate">{activeUser.name}</span>
               <span className="text-[10px] text-slate-500">▼</span>
             </button>
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 rounded-xl bg-slate-900 border border-slate-800 shadow-xl p-1.5 z-50">
                 <div className="px-2.5 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Demo Learner Profiles
+                  Switch learner
                 </div>
                 {DEMO_USERS.map((user) => (
                   <button

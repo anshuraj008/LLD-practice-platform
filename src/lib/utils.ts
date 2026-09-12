@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Truncate card copy at a sentence or word boundary so ellipsis does not look accidental. */
+export function excerptForCard(text: string, maxChars = 168): string {
+  const normalized = text.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= maxChars) return normalized;
+
+  const window = normalized.slice(0, maxChars + 1);
+  const sentenceMatch = window.match(/^([\s\S]*?[.!?])(?:\s|$)/);
+  if (sentenceMatch && sentenceMatch[1].length >= 80) {
+    return sentenceMatch[1].trim();
+  }
+
+  const sliced = normalized.slice(0, maxChars);
+  const lastSpace = sliced.lastIndexOf(' ');
+  const cut = lastSpace > 80 ? lastSpace : maxChars;
+  return `${sliced.slice(0, cut).trim()}…`;
+}
+
 export function formatDate(isoString: string | null | undefined): string {
   if (!isoString) return 'N/A';
   try {

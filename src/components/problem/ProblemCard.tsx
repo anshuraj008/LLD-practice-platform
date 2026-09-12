@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Clock, Award, Tag, Sparkles, CheckCircle2 } from 'lucide-react';
-import { getDifficultyColor, getScoreColor } from '@/lib/utils';
+import { excerptForCard, getDifficultyColor, getScoreColor } from '@/lib/utils';
 
 interface ProblemCardProps {
   problem: {
@@ -24,7 +24,7 @@ export function ProblemCard({ problem }: ProblemCardProps) {
   const scoreColors = getScoreColor(problem.bestScore);
 
   return (
-    <div className="group relative rounded-2xl bg-slate-900/90 border border-slate-800/80 hover:border-slate-700 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:shadow-blue-950/20 hover:-translate-y-0.5">
+    <div className="group relative h-full rounded-2xl bg-slate-900/90 border border-slate-800/80 hover:border-slate-700 p-6 flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:shadow-blue-950/20 hover:-translate-y-0.5">
       <div>
         {/* Top Badges */}
         <div className="flex items-center justify-between gap-2 mb-3.5">
@@ -55,9 +55,12 @@ export function ProblemCard({ problem }: ProblemCardProps) {
           {problem.title}
         </h3>
 
-        {/* Description */}
-        <p className="mt-2.5 text-xs text-slate-400 leading-relaxed line-clamp-3">
-          {problem.description}
+        {/* Description: 3-line clamp with a sentence/word-boundary excerpt so the cut is intentional */}
+        <p
+          className="card-excerpt mt-2.5 min-h-[3.75rem] text-xs text-slate-400 leading-relaxed"
+          title={problem.description}
+        >
+          {excerptForCard(problem.description)}
         </p>
 
         {/* Tags */}
