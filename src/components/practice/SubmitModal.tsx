@@ -3,6 +3,7 @@
 import React from 'react';
 import { CheckCircle2, AlertTriangle, XCircle, Send, Loader2, X, ShieldCheck } from 'lucide-react';
 import { AttemptDraft } from '@/domain/types/attempt';
+import { SUBMISSION_REQUIREMENTS } from '@/lib/submission-requirements';
 
 interface SubmitModalProps {
   isOpen: boolean;
@@ -21,9 +22,9 @@ export function SubmitModal({
 }: SubmitModalProps) {
   if (!isOpen) return null;
 
-  const classesExist = draft.classes.length >= 2;
+  const classesExist = draft.classes.length >= SUBMISSION_REQUIREMENTS.minimumClasses;
   const validResponsibilities = draft.classes.filter(
-    (c) => c.responsibility.trim().length >= 10
+    (c) => c.responsibility.trim().length >= SUBMISSION_REQUIREMENTS.responsibilityMinLength
   ).length;
   const responsibilitiesValid =
     classesExist && validResponsibilities === draft.classes.length;
@@ -31,42 +32,43 @@ export function SubmitModal({
   const checks = [
     {
       label: 'Scope & Assumptions specified',
-      passed: draft.assumptions.trim().length >= 15,
-      detail: `${draft.assumptions.trim().length} chars (minimum 15)`,
+      passed: draft.assumptions.trim().length >= SUBMISSION_REQUIREMENTS.assumptionsMinLength,
+      detail: `${draft.assumptions.trim().length} chars (minimum ${SUBMISSION_REQUIREMENTS.assumptionsMinLength})`,
     },
     {
       label: 'At least 2 distinct classes defined',
-      passed: draft.classes.length >= 2,
-      detail: `${draft.classes.length} classes defined`,
+      passed: classesExist,
+      detail: `${draft.classes.length} classes defined (minimum ${SUBMISSION_REQUIREMENTS.minimumClasses})`,
     },
     {
       label: 'Class responsibilities provided',
       passed: responsibilitiesValid,
-      detail: `${validResponsibilities} valid responsibilities`,
+      detail: `${validResponsibilities} valid responsibilities (required for each class)`,
     },
     {
       label: 'Relationships & Interfaces detailed',
-      passed: draft.relationships.trim().length >= 15,
-      detail: `${draft.relationships.trim().length} chars (minimum 15)`,
+      passed: draft.relationships.trim().length >= SUBMISSION_REQUIREMENTS.relationshipsMinLength,
+      detail: `${draft.relationships.trim().length} chars (minimum ${SUBMISSION_REQUIREMENTS.relationshipsMinLength})`,
     },
     {
       label: 'Main Execution Flow explained',
-      passed: draft.mainFlow.trim().length >= 20,
-      detail: `${draft.mainFlow.trim().length} chars (minimum 20)`,
+      passed: draft.mainFlow.trim().length >= SUBMISSION_REQUIREMENTS.mainFlowMinLength,
+      detail: `${draft.mainFlow.trim().length} chars (minimum ${SUBMISSION_REQUIREMENTS.mainFlowMinLength})`,
     },
     {
       label: 'Edge Cases & Concurrency considered',
-      passed: draft.edgeCases.trim().length >= 15,
-      detail: `${draft.edgeCases.trim().length} chars (minimum 15)`,
+      passed: draft.edgeCases.trim().length >= SUBMISSION_REQUIREMENTS.edgeCasesMinLength,
+      detail: `${draft.edgeCases.trim().length} chars (minimum ${SUBMISSION_REQUIREMENTS.edgeCasesMinLength})`,
     },
     {
       label: 'Trade-offs & Extensibility justified',
-      passed: draft.tradeOffs.trim().length >= 15,
-      detail: `${draft.tradeOffs.trim().length} chars (minimum 15)`,
+      passed: draft.tradeOffs.trim().length >= SUBMISSION_REQUIREMENTS.tradeOffsMinLength,
+      detail: `${draft.tradeOffs.trim().length} chars (minimum ${SUBMISSION_REQUIREMENTS.tradeOffsMinLength})`,
     },
   ];
 
   const hasCriticalFailure = checks.some((c) => !c.passed);
+  const remainingRequirements = checks.filter((c) => !c.passed).length;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150">
@@ -115,13 +117,12 @@ export function SubmitModal({
           ))}
         </div>
 
-        {/* Warning if incomplete */}
+        {/* Hard submission gate */}
         {hasCriticalFailure && (
           <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-300">
             <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <p>
-              Some sections have minimal content. While you can still submit, thorough answers receive
-              significantly higher marks and more nuanced evaluation from the AI evaluator.
+              Complete {remainingRequirements} remaining requirement{remainingRequirements === 1 ? '' : 's'} before evaluation.
             </p>
           </div>
         )}
@@ -146,8 +147,8 @@ export function SubmitModal({
           <button
             type="button"
             onClick={onConfirm}
-            disabled={isSubmitting}
-            className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-semibold text-xs flex items-center gap-2 shadow-md shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            disabled={isSubmitting || hasCriticalFailure}
+            className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:pointer-events-none text-white font-semibold text-xs flex items-center gap-2 shadow-md shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             {isSubmitting ? (
               <>

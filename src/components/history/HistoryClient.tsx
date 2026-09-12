@@ -15,6 +15,8 @@ import {
   Box,
   Layers,
   Sparkles,
+  Loader2,
+  RefreshCw,
 } from 'lucide-react';
 import { UserHistoryOverview, HistoryAttemptItem } from '@/services/history-service';
 import { formatDate, getDifficultyColor, getScoreColor } from '@/lib/utils';
@@ -27,6 +29,7 @@ interface HistoryClientProps {
 export function HistoryClient({ initialHistory, userName }: HistoryClientProps) {
   const router = useRouter();
   const [selectedAttempts, setSelectedAttempts] = useState<string[]>([]);
+  const [retryingEvaluationId, setRetryingEvaluationId] = useState<string | null>(null);
 
   const handleToggleSelect = (attemptId: string) => {
     setSelectedAttempts((prev) => {
@@ -43,6 +46,22 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
   const handleCompare = () => {
     if (selectedAttempts.length === 2) {
       router.push(`/compare?a=${selectedAttempts[0]}&b=${selectedAttempts[1]}`);
+    }
+  };
+
+  const handleRetryEvaluation = async (evaluationId: string) => {
+    setRetryingEvaluationId(evaluationId);
+    try {
+      const response = await fetch(`/api/evaluations/${evaluationId}/retry`, { method: 'POST' });
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.error || 'Retry failed');
+      }
+      router.refresh();
+    } catch (error) {
+      console.error('Evaluation retry failed:', error);
+    } finally {
+      setRetryingEvaluationId(null);
     }
   };
 
@@ -171,6 +190,9 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
               const isSelected = selectedAttempts.includes(att.attemptId);
               const diffColors = getDifficultyColor(att.problemDifficulty);
               const scoreColors = getScoreColor(att.overallScore);
+              const isDraft = att.status === 'DRAFT';
+              const evaluationStatus = att.evaluationStatus || 'QUEUED';
+              const isRetrying = retryingEvaluationId === att.evaluationId;
 
               return (
                 <div
@@ -215,7 +237,11 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
 
                     {/* Score & Progression Delta */}
                     <div className="flex items-center justify-between sm:justify-end gap-4">
-                      {att.overallScore !== undefined && att.overallScore !== null ? (
+                      {isDraft ? (
+                        <span className="text-xs font-medium text-amber-400 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                          Draft in Progress
+                        </span>
+                      ) : evaluationStatus === 'COMPLETED' && att.overallScore !== undefined && att.overallScore !== null ? (
                         <div className="flex items-center gap-2.5">
                           <div
                             className={`px-3 py-1 rounded-xl text-xs font-mono font-bold border ${scoreColors.badge}`}
@@ -237,23 +263,48 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
                               </div>
                             )}
                         </div>
+                      ) : evaluationStatus === 'QUEUED' ? (
+                        <span className="text-xs font-medium text-blue-400 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                          Evaluation Queued
+                        </span>
+                      ) : evaluationStatus === 'EVALUATING' ? (
+                        <span className="text-xs font-medium text-blue-400 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center gap-1.5">
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          Evaluating...
+                        </span>
                       ) : (
-                        <span className="text-xs font-medium text-amber-400 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                          Draft in Progress
+                        <span className="text-xs font-medium text-rose-400 px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20">
+                          Evaluation Failed
                         </span>
                       )}
 
-                      <Link
-                        href={
-                          att.status === 'SUBMITTED'
-                            ? `/attempts/${att.attemptId}/feedback`
-                            : `/attempts/${att.attemptId}`
-                        }
-                        className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-xs font-semibold text-slate-200 hover:text-white border border-slate-700 transition-colors flex items-center gap-1"
-                      >
-                        <span>{att.status === 'SUBMITTED' ? 'View Review' : 'Resume Draft'}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </Link>
+                      {isDraft ? (
+                        <Link
+                          href={`/attempts/${att.attemptId}`}
+                          className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-xs font-semibold text-slate-200 hover:text-white border border-slate-700 transition-colors flex items-center gap-1"
+                        >
+                          <span>Resume Draft</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      ) : evaluationStatus === 'FAILED' ? (
+                        <button
+                          type="button"
+                          onClick={() => att.evaluationId && handleRetryEvaluation(att.evaluationId)}
+                          disabled={!att.evaluationId || isRetrying}
+                          className="px-3.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 disabled:opacity-50 text-xs font-semibold text-rose-300 border border-rose-500/30 transition-colors flex items-center gap-1"
+                        >
+                          {isRetrying ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                          <span>{isRetrying ? 'Retrying...' : 'Retry Evaluation'}</span>
+                        </button>
+                      ) : (
+                        <Link
+                          href={`/attempts/${att.attemptId}/feedback`}
+                          className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-xs font-semibold text-slate-200 hover:text-white border border-slate-700 transition-colors flex items-center gap-1"
+                        >
+                          <span>{evaluationStatus === 'COMPLETED' ? 'View Feedback' : 'View Evaluation'}</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -22,6 +22,30 @@ describe('Zod Schema Contracts & Validation Invariants', () => {
       expect(result.success).toBe(true);
     });
 
+    it('rejects a submission that does not meet meaningful practice minimums', () => {
+      const incompletePayload = {
+        format: 'structured-text' as const,
+        assumptions: 'Too short',
+        classes: [
+          { name: 'ParkingLot', responsibility: 'Manages floors' },
+          { name: 'ParkingSpot', responsibility: 'Tracks occupancy' },
+        ],
+        relationships: 'Too short',
+        mainFlow: 'Too short',
+        edgeCases: 'Too short',
+        tradeOffs: 'Too short',
+      };
+
+      const result = StructuredTextSubmissionPayloadSchema.safeParse(incompletePayload);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.map((issue) => issue.path[0])).toEqual(
+          expect.arrayContaining(['assumptions', 'relationships', 'mainFlow', 'edgeCases', 'tradeOffs'])
+        );
+      }
+    });
+
     it('rejects submission with fewer than 2 classes', () => {
       const invalidPayload = {
         format: 'structured-text' as const,
