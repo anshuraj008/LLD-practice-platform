@@ -231,6 +231,7 @@ export function EvaluationFeedbackClient({
                   weight={item.weight}
                   score={item.score}
                   evidence={item.evidence}
+                  strength={item.strength}
                   concern={item.concern}
                   suggestion={item.suggestion}
                   confidence={item.confidence}

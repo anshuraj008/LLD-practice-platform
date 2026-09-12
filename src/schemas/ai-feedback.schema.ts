@@ -17,6 +17,11 @@ export const FeedbackItemOutputSchema = z.object({
   evidence: z
     .array(z.string().trim().min(1))
     .min(1, 'At least one direct quote or concrete evidence reference is required'),
+  strength: z
+    .string()
+    .trim()
+    .min(5, 'Strength explanation must be meaningful')
+    .default('The submission provides relevant evidence for this criterion.'),
   concern: z.string().trim().min(5, 'Concern explanation must be meaningful'),
   suggestion: z.string().trim().min(5, 'Suggestion must be actionable and concrete'),
   confidence: z.number().min(0.0).max(1.0).default(0.9),

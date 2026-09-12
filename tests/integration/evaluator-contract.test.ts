@@ -61,9 +61,11 @@ describe('Evaluator Contract & Prompt Injection Isolation', () => {
     expect(result.summary).toBeDefined();
     expect(result.strengths.length).toBeGreaterThanOrEqual(1);
 
-    // Verify all criteria contain quoted evidence and concrete suggestions
+    // Verify all criteria contain evidence-backed, actionable feedback
     for (const c of result.criteria) {
       expect(c.evidence.length).toBeGreaterThanOrEqual(1);
+      expect(c.strength).toBeDefined();
+      expect(c.strength.length).toBeGreaterThanOrEqual(5);
       expect(c.concern).toBeDefined();
       expect(c.suggestion).toBeDefined();
     }

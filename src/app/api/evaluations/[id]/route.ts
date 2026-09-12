@@ -44,6 +44,7 @@ export async function GET(
         weight: meta ? meta.weight : 0.15,
         score: i.score,
         evidence: JSON.parse(i.evidenceJson),
+        strength: i.strength || 'The submission provides relevant evidence for this criterion.',
         concern: i.concern,
         suggestion: i.suggestion,
         confidence: i.confidence / 100,

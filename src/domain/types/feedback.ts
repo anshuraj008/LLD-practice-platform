@@ -4,6 +4,7 @@ export interface FeedbackItem {
   criterionId: RubricCriterionId;
   score: number; // 0 to 5
   evidence: string[]; // Cited quotes or snippets from the learner submission
+  strength?: string; // Specific design strength demonstrated for this criterion
   concern: string; // Specific design deficiency or gap identified
   suggestion: string; // Actionable, concrete improvement advice
   confidence: number; // 0.0 to 1.0 confidence score

@@ -71,6 +71,7 @@ export interface DbEvaluationItem {
   criterionId: string;
   score: number;
   evidenceJson: string;
+  strength?: string;
   concern: string;
   suggestion: string;
   confidence: number;

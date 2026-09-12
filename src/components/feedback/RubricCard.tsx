@@ -1,5 +1,5 @@
 import React from 'react';
-import { Quote, AlertCircle, Lightbulb, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Quote, AlertCircle, Lightbulb, ShieldCheck, CheckCircle2, ThumbsUp } from 'lucide-react';
 
 export interface CriterionFeedbackProps {
   criterionId: string;
@@ -7,6 +7,7 @@ export interface CriterionFeedbackProps {
   weight: number;
   score: number; // 0 to 5
   evidence: string[];
+  strength?: string;
   concern: string;
   suggestion: string;
   confidence: number;
@@ -17,6 +18,7 @@ export function RubricCard({
   weight,
   score,
   evidence,
+  strength,
   concern,
   suggestion,
   confidence,
@@ -89,13 +91,23 @@ export function RubricCard({
         </div>
       )}
 
-      {/* Concerns & Concrete Suggestions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+      {/* Strength, concern, and concrete suggestion */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+        <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/15 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+            <ThumbsUp className="w-3.5 h-3.5" />
+            <span>Strength</span>
+          </div>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            {strength || 'The submission provides relevant evidence for this criterion.'}
+          </p>
+        </div>
+
         {/* Concern */}
         <div className="p-3.5 rounded-xl bg-rose-500/5 border border-rose-500/15 space-y-1.5">
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-400 uppercase tracking-wider">
             <AlertCircle className="w-3.5 h-3.5" />
-            <span>Identified Concern / Gap</span>
+            <span>Concern</span>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed">{concern}</p>
         </div>
@@ -104,7 +116,7 @@ export function RubricCard({
         <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/15 space-y-1.5">
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
             <Lightbulb className="w-3.5 h-3.5" />
-            <span>Concrete Actionable Suggestion</span>
+            <span>Suggestion</span>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed">{suggestion}</p>
         </div>
@@ -113,7 +125,9 @@ export function RubricCard({
       {/* Footer: Confidence indicator */}
       <div className="flex items-center justify-end text-[10px] text-slate-400 gap-1 pt-1">
         <ShieldCheck className="w-3 h-3 text-slate-400" />
-        <span>Evaluation Confidence: {(confidence * 100).toFixed(0)}%</span>
+        <span>
+          Confidence: {confidence >= 0.85 ? 'High' : confidence >= 0.65 ? 'Medium' : 'Low'} ({(confidence * 100).toFixed(0)}%)
+        </span>
       </div>
     </div>
   );
