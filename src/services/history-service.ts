@@ -56,9 +56,9 @@ export interface AttemptComparison {
     criterionId: string;
     criterionName: string;
     weight: number;
-    scoreA: number;
-    scoreB: number;
-    delta: number;
+    scoreA: number | null;
+    scoreB: number | null;
+    delta: number | null;
   }>;
   scoreDelta: number;
 }
@@ -190,6 +190,17 @@ export class HistoryService {
     const evalA = subA ? this.db.getEvaluationBySubmissionId(subA.id) : undefined;
     const evalB = subB ? this.db.getEvaluationBySubmissionId(subB.id) : undefined;
 
+    if (
+      !evalA ||
+      !evalB ||
+      evalA.status !== 'COMPLETED' ||
+      evalB.status !== 'COMPLETED' ||
+      evalA.overallScore === null ||
+      evalB.overallScore === null
+    ) {
+      throw new Error('Comparison unavailable: both attempts must have completed evaluations.');
+    }
+
     const prob = this.db.getProblemById(attemptA.problemId);
     const rubric = prob ? this.db.getRubricById(prob.rubricId) : undefined;
     const criteriaList = rubric ? JSON.parse(rubric.criteriaJson) : [];
@@ -204,20 +215,20 @@ export class HistoryService {
     for (const it of itemsB) scoresMapB[it.criterionId] = it.score;
 
     const criterionDeltas = criteriaList.map((c: any) => {
-      const sA = scoresMapA[c.id] || 0;
-      const sB = scoresMapB[c.id] || 0;
+      const sA = scoresMapA[c.id] ?? null;
+      const sB = scoresMapB[c.id] ?? null;
       return {
         criterionId: c.id,
         criterionName: c.name,
         weight: c.weight,
         scoreA: sA,
         scoreB: sB,
-        delta: sB - sA,
+        delta: sA !== null && sB !== null ? sB - sA : null,
       };
     });
 
-    const scoreA = evalA?.overallScore || 0;
-    const scoreB = evalB?.overallScore || 0;
+    const scoreA = evalA.overallScore;
+    const scoreB = evalB.overallScore;
 
     return {
       attemptA: {

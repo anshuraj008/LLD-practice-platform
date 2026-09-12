@@ -44,7 +44,19 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
   };
 
   const handleCompare = () => {
-    if (selectedAttempts.length === 2) {
+    const selectedItems = initialHistory.attempts.filter((attempt) =>
+      selectedAttempts.includes(attempt.attemptId)
+    );
+    const canCompare =
+      selectedItems.length === 2 &&
+      selectedItems.every(
+        (attempt) =>
+          attempt.status === 'SUBMITTED' &&
+          attempt.evaluationStatus === 'COMPLETED' &&
+          typeof attempt.overallScore === 'number'
+      );
+
+    if (canCompare) {
       router.push(`/compare?a=${selectedAttempts[0]}&b=${selectedAttempts[1]}`);
     }
   };
@@ -64,6 +76,18 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
       setRetryingEvaluationId(null);
     }
   };
+
+  const selectedItems = initialHistory.attempts.filter((attempt) =>
+    selectedAttempts.includes(attempt.attemptId)
+  );
+  const canCompare =
+    selectedItems.length === 2 &&
+    selectedItems.every(
+      (attempt) =>
+        attempt.status === 'SUBMITTED' &&
+        attempt.evaluationStatus === 'COMPLETED' &&
+        typeof attempt.overallScore === 'number'
+    );
 
   return (
     <div className="space-y-8">
@@ -86,10 +110,11 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
           {selectedAttempts.length === 2 && (
             <button
               onClick={handleCompare}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              disabled={!canCompare}
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:pointer-events-none text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <GitCompare className="w-4 h-4" />
-              <span>Compare 2 Selected Attempts</span>
+              <span>{canCompare ? 'Compare 2 Selected Attempts' : 'Complete both evaluations first'}</span>
             </button>
           )}
         </div>
@@ -209,9 +234,14 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
                       <input
                         type="checkbox"
                         checked={isSelected}
+                        disabled={att.status !== 'SUBMITTED' || att.evaluationStatus !== 'COMPLETED'}
                         onChange={() => handleToggleSelect(att.attemptId)}
-                        className="mt-1 w-4 h-4 rounded bg-slate-950 border-slate-700 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                        title="Select for comparison"
+                        className="mt-1 w-4 h-4 rounded bg-slate-950 border-slate-700 text-blue-600 focus:ring-blue-500 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                        title={
+                          att.status === 'SUBMITTED' && att.evaluationStatus === 'COMPLETED'
+                            ? 'Select for comparison'
+                            : 'Comparison requires a completed evaluation'
+                        }
                       />
 
                       <div className="space-y-1">

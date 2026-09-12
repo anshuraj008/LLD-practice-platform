@@ -34,11 +34,22 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
   // If no IDs provided or only 1, pick the first 2 submitted attempts by default for instant reviewer demo
   const finalA = attemptIdA || (submittedAttempts.length >= 2 ? submittedAttempts[1].attemptId : submittedAttempts[0]?.attemptId);
   const finalB = attemptIdB || (submittedAttempts.length >= 2 ? submittedAttempts[0].attemptId : null);
+  const selectedAttemptA = submittedAttempts.find((attempt) => attempt.attemptId === finalA);
+  const selectedAttemptB = submittedAttempts.find((attempt) => attempt.attemptId === finalB);
+  const canCompare = Boolean(
+    finalA &&
+      finalB &&
+      finalA !== finalB &&
+      selectedAttemptA?.evaluationStatus === 'COMPLETED' &&
+      selectedAttemptB?.evaluationStatus === 'COMPLETED' &&
+      typeof selectedAttemptA.overallScore === 'number' &&
+      typeof selectedAttemptB.overallScore === 'number'
+  );
 
   let comparison: AttemptComparison | null = null;
   let errorMessage: string | null = null;
 
-  if (finalA && finalB && finalA !== finalB) {
+  if (canCompare && finalA && finalB) {
     try {
       comparison = historyService.compareAttempts(finalA, finalB);
     } catch (err: any) {
@@ -89,7 +100,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             >
               {submittedAttempts.map((att) => (
                 <option key={att.attemptId} value={att.attemptId}>
-                  {att.problemTitle} (Score: {att.overallScore ?? 'N/A'}%) - {formatDate(att.submittedAt)}
+                  {att.problemTitle} ({att.evaluationStatus === 'COMPLETED' && att.overallScore !== null ? `Score: ${att.overallScore}%` : `Evaluation ${att.evaluationStatus?.toLowerCase() || 'pending'}`}) - {formatDate(att.submittedAt)}
                 </option>
               ))}
             </select>
@@ -106,7 +117,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             >
               {submittedAttempts.map((att) => (
                 <option key={att.attemptId} value={att.attemptId}>
-                  {att.problemTitle} (Score: {att.overallScore ?? 'N/A'}%) - {formatDate(att.submittedAt)}
+                  {att.problemTitle} ({att.evaluationStatus === 'COMPLETED' && att.overallScore !== null ? `Score: ${att.overallScore}%` : `Evaluation ${att.evaluationStatus?.toLowerCase() || 'pending'}`}) - {formatDate(att.submittedAt)}
                 </option>
               ))}
             </select>
@@ -115,7 +126,8 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
           <div className="flex items-end">
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors"
+              disabled={!canCompare}
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:pointer-events-none text-white font-semibold text-xs transition-colors"
             >
               Compare
             </button>
@@ -123,9 +135,13 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
         </form>
       </div>
 
-      {errorMessage && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300">
-          {errorMessage}
+      {!comparison && (
+        <div className="p-8 rounded-2xl bg-slate-900/80 border border-slate-800 text-center space-y-2">
+          <h2 className="text-base font-bold text-slate-100">Comparison unavailable</h2>
+          <p className="text-xs text-slate-400">
+            Both attempts must have completed evaluations before score comparison can be generated.
+          </p>
+          {errorMessage && <p className="text-xs text-rose-300">{errorMessage}</p>}
         </div>
       )}
 
@@ -205,14 +221,14 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
                       <td className="px-4 py-3 font-mono font-bold">
                         <span
                           className={`px-2 py-0.5 rounded ${
-                            c.delta > 0
+                            c.delta !== null && c.delta > 0
                               ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                               : c.delta === 0
                               ? 'bg-slate-800 text-slate-400'
                               : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                           }`}
                         >
-                          {c.delta > 0 ? `+${c.delta}` : c.delta}
+                          {c.delta === null ? 'N/A' : c.delta > 0 ? `+${c.delta}` : c.delta}
                         </span>
                       </td>
                     </tr>
