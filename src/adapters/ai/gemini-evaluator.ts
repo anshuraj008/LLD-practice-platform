@@ -41,7 +41,7 @@ export class GeminiEvaluator implements Evaluator {
       .join('\n');
 
     const prompt = `You are a Principal Software Architect and Low-Level Design (LLD) Interview Evaluator.
-Your goal is to evaluate a learner's Low-Level Design submission against a standard, objective rubric.
+Your goal is to provide evidence-based feedback on a learner's Low-Level Design submission against a consistent rubric. Multiple designs may be valid; judge the submitted design against the stated requirements and rubric criteria rather than against one canonical architecture.
 
 CRITICAL INSTRUCTIONS & GUARDRAILS:
 1. Multiple valid designs exist. Do NOT penalize the learner simply because their design differs from one specific canonical reference solution.

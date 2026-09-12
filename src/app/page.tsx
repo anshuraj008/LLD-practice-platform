@@ -74,8 +74,8 @@ export default async function HomePage() {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
-            Choose a problem, author a structured design, and receive instant, objective evaluation
-            scored against an 8-criterion industry rubric with cited evidence, concrete trade-off analysis,
+            Choose a problem, author a structured design, and receive structured, explainable AI feedback
+            against a consistent 8-criterion LLD rubric with cited evidence, concrete trade-off analysis,
             and iterative attempt comparisons.
           </p>
 

@@ -200,8 +200,8 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
         </div>
 
         <p className="text-xs text-slate-400">
-          Your design will be evaluated objectively against these criteria. Each criterion provides
-          an exact score (0-5), cited evidence from your submission, concerns, and actionable suggestions.
+          Your design will receive structured feedback against these criteria. Each criterion provides
+          a rubric score (0-5), cited evidence from your submission, trade-off concerns, and actionable suggestions.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
