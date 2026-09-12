@@ -26,7 +26,7 @@ export class GeminiEvaluator implements Evaluator {
 
     const genAI = new GoogleGenerativeAI(this.apiKey);
     const model = genAI.getGenerativeModel({
-      model: 'gemini-3.6-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: {
         responseMimeType: 'application/json',
         temperature: 0.2,
