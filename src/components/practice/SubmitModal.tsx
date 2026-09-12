@@ -21,6 +21,13 @@ export function SubmitModal({
 }: SubmitModalProps) {
   if (!isOpen) return null;
 
+  const classesExist = draft.classes.length >= 2;
+  const validResponsibilities = draft.classes.filter(
+    (c) => c.responsibility.trim().length >= 10
+  ).length;
+  const responsibilitiesValid =
+    classesExist && validResponsibilities === draft.classes.length;
+
   const checks = [
     {
       label: 'Scope & Assumptions specified',
@@ -34,10 +41,8 @@ export function SubmitModal({
     },
     {
       label: 'Class responsibilities provided',
-      passed: draft.classes.every((c) => c.responsibility.trim().length >= 10),
-      detail: draft.classes.every((c) => c.responsibility.trim().length >= 10)
-        ? 'All responsibilities valid'
-        : 'Some class responsibilities are too short',
+      passed: responsibilitiesValid,
+      detail: `${validResponsibilities} valid responsibilities`,
     },
     {
       label: 'Relationships & Interfaces detailed',
