@@ -152,6 +152,28 @@ export class RelationalDatabase {
   public getAttemptsByUserAndProblem(userId: string, problemId: string): DbAttempt[] {
     return this.state.attempts.filter((a) => a.userId === userId && a.problemId === problemId);
   }
+  public resetUserHistory(userId: string): void {
+    const attemptIds = new Set(
+      this.state.attempts.filter((attempt) => attempt.userId === userId).map((attempt) => attempt.id)
+    );
+    const submissionIds = new Set(
+      this.state.submissions
+        .filter((submission) => attemptIds.has(submission.attemptId))
+        .map((submission) => submission.id)
+    );
+
+    this.state.evaluationItems = this.state.evaluationItems.filter(
+      (item) => !submissionIds.has(this.state.evaluations.find((evaluation) => evaluation.id === item.evaluationId)?.submissionId || '')
+    );
+    this.state.evaluations = this.state.evaluations.filter(
+      (evaluation) => !submissionIds.has(evaluation.submissionId)
+    );
+    this.state.submissions = this.state.submissions.filter(
+      (submission) => !attemptIds.has(submission.attemptId)
+    );
+    this.state.attempts = this.state.attempts.filter((attempt) => !attemptIds.has(attempt.id));
+    this.persist();
+  }
   public upsertAttempt(attempt: DbAttempt): void {
     const idx = this.state.attempts.findIndex((a) => a.id === attempt.id);
     if (idx >= 0) this.state.attempts[idx] = attempt;

@@ -7,6 +7,9 @@ export function runSeed() {
 
   console.log('🌱 Seeding database...');
 
+  // Keep the reviewer-facing demo history small and reproducible.
+  db.resetUserHistory('user_alice');
+
   // 1. Seed Demo Users
   const demoUsers = [
     {
@@ -547,6 +550,74 @@ export function runSeed() {
   ];
   db.setEvaluationItems(eval2Id, eval2Items);
 
+
+  // Attempt 3: One compact vending-machine example for cross-problem history.
+  const vendingAttemptId = 'att_alice_vending_01';
+  const vendingSubmissionId = 'sub_alice_vending_01';
+  const vendingEvaluationId = 'eval_alice_vending_01';
+  const vendingDraft = {
+    assumptions: 'The machine supports cash and card payments, one active customer transaction at a time, and inventory updates are persisted atomically.',
+    classes: [
+      { name: 'VendingMachine', responsibility: 'Coordinates selection, payment, dispensing, refunds, and state transitions for one customer transaction.' },
+      { name: 'Inventory', responsibility: 'Tracks products, rack positions, quantities, and atomic stock deduction after payment.' },
+      { name: 'PaymentProcessor', responsibility: 'Authorizes payment and issues refunds through interchangeable cash or card adapters.' },
+      { name: 'MachineState', responsibility: 'Encapsulates valid transitions between Idle, HasMoney, Dispensing, and OutOfStock states.' },
+    ],
+    relationships: 'VendingMachine composes Inventory and delegates payment to PaymentProcessor. MachineState controls which commands are valid during a transaction.',
+    mainFlow: '1. Customer selects a product. 2. Machine validates stock and price. 3. PaymentProcessor authorizes payment. 4. Inventory deducts stock atomically. 5. Machine dispenses the product and returns change.',
+    edgeCases: 'Handle out-of-stock selection, payment timeout, insufficient change, cancellation before dispense, and an inventory race when two requests target the last item.',
+    tradeOffs: 'The State pattern keeps transaction rules explicit, while PaymentProcessor adapters keep payment providers replaceable. The demo uses synchronous in-memory persistence for clarity.',
+  };
+
+  db.upsertAttempt({
+    id: vendingAttemptId,
+    userId: 'user_alice',
+    problemId: 'prob_vending_machine',
+    status: 'SUBMITTED',
+    draftJson: JSON.stringify(vendingDraft),
+    createdAt: '2026-09-07T11:00:00.000Z',
+    updatedAt: '2026-09-07T11:35:00.000Z',
+    submittedAt: '2026-09-07T11:35:00.000Z',
+  });
+  db.upsertSubmission({
+    id: vendingSubmissionId,
+    attemptId: vendingAttemptId,
+    format: 'structured-text',
+    payloadJson: JSON.stringify({ format: 'structured-text', ...vendingDraft }),
+    contentHash: crypto.createHash('sha256').update(JSON.stringify(vendingDraft)).digest('hex'),
+    idempotencyKey: '00000000-0000-0000-0000-000000000003',
+    createdAt: '2026-09-07T11:00:00.000Z',
+  });
+  db.upsertEvaluation({
+    id: vendingEvaluationId,
+    submissionId: vendingSubmissionId,
+    status: 'COMPLETED',
+    evaluatorKind: 'gemini-1.5-pro',
+    evaluatorVersion: '1.0.0',
+    rubricVersion: '1.0.0',
+    overallScore: 78,
+    summary: 'A solid state-driven design with clear payment and inventory boundaries. Further detail on recovery and persistence would strengthen the design.',
+    strengthsJson: JSON.stringify(['Clear State pattern usage', 'Atomic inventory responsibility', 'Replaceable payment boundary']),
+    nextAttemptFocusJson: JSON.stringify(['Define durable recovery after a payment timeout', 'Specify exact change calculation behavior']),
+    errorCode: null,
+    errorMessage: null,
+    retryCount: 0,
+    createdAt: '2026-09-07T11:35:05.000Z',
+    completedAt: '2026-09-07T11:35:22.000Z',
+  });
+  db.setEvaluationItems(
+    vendingEvaluationId,
+    DEFAULT_LLD_RUBRIC_CRITERIA.map((criterion, index) => ({
+      id: `vending_eval_item_${index + 1}`,
+      evaluationId: vendingEvaluationId,
+      criterionId: criterion.id,
+      score: index === 6 ? 3 : 4,
+      evidenceJson: JSON.stringify(['State and responsibility boundaries are explicitly described.']),
+      concern: index === 6 ? 'Recovery and failure-path testability could be more concrete.' : 'The design provides a clear, relevant boundary for this criterion.',
+      suggestion: 'Add one concrete example covering the primary failure or extension path.',
+      confidence: 88,
+    }))
+  );
   console.log('✅ Database seeded successfully!');
 }
 

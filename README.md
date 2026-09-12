@@ -97,7 +97,7 @@ NODE_ENV=development
 ```bash
 npm run db:seed
 ```
-*Seeds 4 core problems (Parking Lot, Vending Machine, Elevator System, Library Management) and 2 historical attempts for Alice.*
+*Seeds 4 core problems (Parking Lot, Vending Machine, Elevator System, Library Management) and 3 small historical attempts for Alice.*
 
 ### 4. Run Development Server
 ```bash
@@ -123,7 +123,7 @@ npm run typecheck
 ## 👥 Demo User Personas
 
 Use the Persona Switcher in the top right of the navigation header:
-1. **Alice Developer** (`user_alice`): Contains seeded historical attempts on Parking Lot (Attempt 1 scored 63%, Attempt 2 scored 91%) to demonstrate score trends and side-by-side attempt comparisons.
+1. **Alice Developer** (`user_alice`): Contains two Parking Lot attempts (63% and 91%) plus one Vending Machine attempt (78%) to demonstrate score trends without an artificially large history. Elevator System and Library Management remain unattempted.
 2. **Bob Systems** (`user_bob`): Clean profile for starting fresh attempts from scratch.
 
 ---
