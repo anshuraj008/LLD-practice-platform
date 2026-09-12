@@ -65,7 +65,7 @@ describe('Evaluator Contract & Prompt Injection Isolation', () => {
     for (const c of result.criteria) {
       expect(c.evidence.length).toBeGreaterThanOrEqual(1);
       expect(c.strength).toBeDefined();
-      expect(c.strength.length).toBeGreaterThanOrEqual(5);
+      expect((c.strength || '').length).toBeGreaterThanOrEqual(5);
       expect(c.concern).toBeDefined();
       expect(c.suggestion).toBeDefined();
     }

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Code2, BookOpen, History, GitCompare, User, Sparkles, Check } from 'lucide-react';
+import { Code2, BookOpen, History, User, Sparkles, Check } from 'lucide-react';
 import { DEMO_USERS } from '@/lib/constants';
 
 export function Navbar() {
@@ -38,7 +38,6 @@ export function Navbar() {
   const navLinks = [
     { href: '/', label: 'Problem Library', icon: BookOpen },
     { href: '/history', label: 'Learning History', icon: History },
-    { href: '/compare', label: 'Compare Attempts', icon: GitCompare },
   ];
 
   const activeUserObj = DEMO_USERS.find((u) => u.id === currentUser) || DEMO_USERS[0];
