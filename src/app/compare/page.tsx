@@ -71,10 +71,13 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
       </div>
 
       {/* Main Container */}
-      <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="rounded-3xl bg-[#0c0f1a]/85 backdrop-blur-md border border-white/[0.08] p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+        {/* Glow */}
+        <div className="absolute top-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/15 border border-violet-500/25 text-violet-300 text-xs font-semibold mb-2">
               <GitCompare className="w-3.5 h-3.5" />
               <span>Side-by-Side Architectural Diff</span>
             </div>
@@ -88,7 +91,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
         </div>
 
         {/* Dropdown Selectors */}
-        <form className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-wrap items-center gap-4">
+        <form className="p-4 rounded-2xl bg-[#07090f]/80 border border-white/[0.06] flex flex-wrap items-center gap-4 relative z-10">
           <div className="flex-1 min-w-[200px] space-y-1">
             <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
               Base Attempt (A)
@@ -96,7 +99,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             <select
               name="a"
               defaultValue={finalA || ''}
-              className="w-full text-xs bg-slate-900 text-slate-200 rounded-xl border border-slate-700 p-2.5 focus:outline-none focus:border-blue-500"
+              className="w-full text-xs bg-[#0e121e] text-slate-200 rounded-xl border border-white/[0.1] p-2.5 focus:outline-none focus:border-violet-500 font-mono"
             >
               {submittedAttempts.map((att) => (
                 <option key={att.attemptId} value={att.attemptId}>
@@ -113,7 +116,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             <select
               name="b"
               defaultValue={finalB || ''}
-              className="w-full text-xs bg-slate-900 text-slate-200 rounded-xl border border-slate-700 p-2.5 focus:outline-none focus:border-blue-500"
+              className="w-full text-xs bg-[#0e121e] text-slate-200 rounded-xl border border-white/[0.1] p-2.5 focus:outline-none focus:border-violet-500 font-mono"
             >
               {submittedAttempts.map((att) => (
                 <option key={att.attemptId} value={att.attemptId}>
@@ -127,7 +130,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             <button
               type="submit"
               disabled={!canCompare}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:pointer-events-none text-white font-semibold text-xs transition-colors"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-40 disabled:pointer-events-none text-white font-semibold text-xs shadow-md shadow-violet-600/25 transition-all"
             >
               Compare
             </button>
@@ -136,7 +139,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
       </div>
 
       {!comparison && (
-        <div className="p-8 rounded-2xl bg-slate-900/80 border border-slate-800 text-center space-y-2">
+        <div className="p-8 rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] text-center space-y-2">
           <h2 className="text-base font-bold text-slate-100">Comparison unavailable</h2>
           <p className="text-xs text-slate-400">
             Both attempts must have completed evaluations before score comparison can be generated.
@@ -150,7 +153,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
           {/* Score Improvement Banner */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Attempt A Card */}
-            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+            <div className="p-5 rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] space-y-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Attempt A
               </span>
@@ -164,9 +167,9 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             </div>
 
             {/* Score Delta Badge */}
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-blue-950/40 border border-blue-500/30 flex flex-col items-center justify-center text-center space-y-1">
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c0f1a] to-violet-950/30 border border-violet-500/30 flex flex-col items-center justify-center text-center space-y-1">
               <TrendingUp className="w-6 h-6 text-emerald-400" />
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-400">Score Delta</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-violet-300">Score Delta</span>
               <div className={`text-3xl font-black ${comparison.scoreDelta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                 {comparison.scoreDelta >= 0 ? '+' : ''}{comparison.scoreDelta}%
               </div>
@@ -176,8 +179,8 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             </div>
 
             {/* Attempt B Card */}
-            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400">
+            <div className="p-5 rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-violet-400">
                 Attempt B (Refactored)
               </span>
               <p className="text-xs font-semibold text-slate-200">{formatDate(comparison.attemptB.submittedAt)}</p>
@@ -240,50 +243,52 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
 
           {/* Side-by-Side Structured Design Sections */}
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Layers className="w-5 h-5 text-blue-400" />
-              Side-by-Side Design Evolution
+            <h3 className="text-lg font-bold text-white flex items-center gap-2.5">
+              <div className="w-6 h-6 rounded-lg bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400">
+                <Layers className="w-3.5 h-3.5" />
+              </div>
+              Side-by-Side Architectural Evolution
             </h3>
 
             {/* Section 1: Assumptions */}
-            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-5 space-y-3">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-800 text-xs font-bold text-slate-200">
-                <FileText className="w-4 h-4 text-blue-400" />
+            <div className="rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] p-5 space-y-3">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/[0.08] text-xs font-bold text-slate-200">
+                <FileText className="w-4 h-4 text-violet-400" />
                 <span>1. Assumptions & Scope</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 whitespace-pre-wrap leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-[#07090f]/80 border border-white/[0.06] text-slate-300 whitespace-pre-wrap leading-relaxed">
                   <span className="text-[10px] font-sans font-bold uppercase text-slate-500 block mb-1">Attempt A</span>
                   {comparison.attemptA.payload.assumptions || 'None'}
                 </div>
-                <div className="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 text-slate-200 whitespace-pre-wrap leading-relaxed">
-                  <span className="text-[10px] font-sans font-bold uppercase text-blue-400 block mb-1">Attempt B (Refactored)</span>
+                <div className="p-3.5 rounded-xl bg-violet-950/20 border border-violet-500/25 text-slate-200 whitespace-pre-wrap leading-relaxed">
+                  <span className="text-[10px] font-sans font-bold uppercase text-violet-300 block mb-1">Attempt B (Refactored)</span>
                   {comparison.attemptB.payload.assumptions || 'None'}
                 </div>
               </div>
             </div>
 
             {/* Section 2: Classes */}
-            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-5 space-y-3">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-800 text-xs font-bold text-slate-200">
-                <Boxes className="w-4 h-4 text-blue-400" />
+            <div className="rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] p-5 space-y-3">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/[0.08] text-xs font-bold text-slate-200">
+                <Boxes className="w-4 h-4 text-cyan-400" />
                 <span>2. Classes & SRP</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
+                <div className="p-3.5 rounded-xl bg-[#07090f]/80 border border-white/[0.06] space-y-2">
                   <span className="text-[10px] font-sans font-bold uppercase text-slate-500 block">Attempt A</span>
                   {(comparison.attemptA.payload.classes || []).map((c: any, idx: number) => (
-                    <div key={idx} className="p-2 rounded bg-slate-900 border border-slate-800">
+                    <div key={idx} className="p-2 rounded-lg bg-slate-900 border border-white/[0.06]">
                       <span className="font-bold text-slate-100">{c.name}</span>
                       <p className="text-[11px] text-slate-400 font-sans mt-0.5">{c.responsibility}</p>
                     </div>
                   ))}
                 </div>
-                <div className="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 space-y-2">
-                  <span className="text-[10px] font-sans font-bold uppercase text-blue-400 block">Attempt B (Refactored)</span>
+                <div className="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-500/25 space-y-2">
+                  <span className="text-[10px] font-sans font-bold uppercase text-cyan-300 block">Attempt B (Refactored)</span>
                   {(comparison.attemptB.payload.classes || []).map((c: any, idx: number) => (
-                    <div key={idx} className="p-2 rounded bg-slate-900 border border-slate-800">
-                      <span className="font-bold text-blue-300">{c.name}</span>
+                    <div key={idx} className="p-2 rounded-lg bg-slate-900 border border-cyan-500/20">
+                      <span className="font-bold text-cyan-300">{c.name}</span>
                       <p className="text-[11px] text-slate-300 font-sans mt-0.5">{c.responsibility}</p>
                     </div>
                   ))}
@@ -292,72 +297,72 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             </div>
 
             {/* Section 3: Relationships & Interfaces */}
-            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-5 space-y-3">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-800 text-xs font-bold text-slate-200">
-                <Network className="w-4 h-4 text-blue-400" />
+            <div className="rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] p-5 space-y-3">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/[0.08] text-xs font-bold text-slate-200">
+                <Network className="w-4 h-4 text-indigo-400" />
                 <span>3. Relationships, Interfaces & Encapsulation</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 whitespace-pre-wrap leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-[#07090f]/80 border border-white/[0.06] text-slate-300 whitespace-pre-wrap leading-relaxed">
                   <span className="text-[10px] font-sans font-bold uppercase text-slate-500 block mb-1">Attempt A</span>
                   {comparison.attemptA.payload.relationships || 'None'}
                 </div>
-                <div className="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 text-slate-200 whitespace-pre-wrap leading-relaxed">
-                  <span className="text-[10px] font-sans font-bold uppercase text-blue-400 block mb-1">Attempt B (Refactored)</span>
+                <div className="p-3.5 rounded-xl bg-violet-950/20 border border-violet-500/25 text-slate-200 whitespace-pre-wrap leading-relaxed">
+                  <span className="text-[10px] font-sans font-bold uppercase text-violet-300 block mb-1">Attempt B (Refactored)</span>
                   {comparison.attemptB.payload.relationships || 'None'}
                 </div>
               </div>
             </div>
 
             {/* Section 4: Main Flow */}
-            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-5 space-y-3">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-800 text-xs font-bold text-slate-200">
-                <Workflow className="w-4 h-4 text-blue-400" />
+            <div className="rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] p-5 space-y-3">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/[0.08] text-xs font-bold text-slate-200">
+                <Workflow className="w-4 h-4 text-amber-400" />
                 <span>4. Main Execution Flow</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 whitespace-pre-wrap leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-[#07090f]/80 border border-white/[0.06] text-slate-300 whitespace-pre-wrap leading-relaxed">
                   <span className="text-[10px] font-sans font-bold uppercase text-slate-500 block mb-1">Attempt A</span>
                   {comparison.attemptA.payload.mainFlow || 'None'}
                 </div>
-                <div className="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 text-slate-200 whitespace-pre-wrap leading-relaxed">
-                  <span className="text-[10px] font-sans font-bold uppercase text-blue-400 block mb-1">Attempt B (Refactored)</span>
+                <div className="p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/25 text-slate-200 whitespace-pre-wrap leading-relaxed">
+                  <span className="text-[10px] font-sans font-bold uppercase text-amber-300 block mb-1">Attempt B (Refactored)</span>
                   {comparison.attemptB.payload.mainFlow || 'None'}
                 </div>
               </div>
             </div>
 
             {/* Section 5: Edge Cases */}
-            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-5 space-y-3">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-800 text-xs font-bold text-slate-200">
-                <ShieldCheck className="w-4 h-4 text-blue-400" />
+            <div className="rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] p-5 space-y-3">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/[0.08] text-xs font-bold text-slate-200">
+                <ShieldCheck className="w-4 h-4 text-rose-400" />
                 <span>5. Edge Cases & Concurrency</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 whitespace-pre-wrap leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-[#07090f]/80 border border-white/[0.06] text-slate-300 whitespace-pre-wrap leading-relaxed">
                   <span className="text-[10px] font-sans font-bold uppercase text-slate-500 block mb-1">Attempt A</span>
                   {comparison.attemptA.payload.edgeCases || 'None'}
                 </div>
-                <div className="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 text-slate-200 whitespace-pre-wrap leading-relaxed">
-                  <span className="text-[10px] font-sans font-bold uppercase text-blue-400 block mb-1">Attempt B (Refactored)</span>
+                <div className="p-3.5 rounded-xl bg-rose-950/20 border border-rose-500/25 text-slate-200 whitespace-pre-wrap leading-relaxed">
+                  <span className="text-[10px] font-sans font-bold uppercase text-rose-300 block mb-1">Attempt B (Refactored)</span>
                   {comparison.attemptB.payload.edgeCases || 'None'}
                 </div>
               </div>
             </div>
 
             {/* Section 6: Trade-offs */}
-            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-5 space-y-3">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-800 text-xs font-bold text-slate-200">
-                <Scale className="w-4 h-4 text-blue-400" />
+            <div className="rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] p-5 space-y-3">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/[0.08] text-xs font-bold text-slate-200">
+                <Scale className="w-4 h-4 text-emerald-400" />
                 <span>6. Trade-offs & Extensibility</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 whitespace-pre-wrap leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-[#07090f]/80 border border-white/[0.06] text-slate-300 whitespace-pre-wrap leading-relaxed">
                   <span className="text-[10px] font-sans font-bold uppercase text-slate-500 block mb-1">Attempt A</span>
                   {comparison.attemptA.payload.tradeOffs || 'None'}
                 </div>
-                <div className="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 text-slate-200 whitespace-pre-wrap leading-relaxed">
-                  <span className="text-[10px] font-sans font-bold uppercase text-blue-400 block mb-1">Attempt B (Refactored)</span>
+                <div className="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-500/25 text-slate-200 whitespace-pre-wrap leading-relaxed">
+                  <span className="text-[10px] font-sans font-bold uppercase text-emerald-300 block mb-1">Attempt B (Refactored)</span>
                   {comparison.attemptB.payload.tradeOffs || 'None'}
                 </div>
               </div>

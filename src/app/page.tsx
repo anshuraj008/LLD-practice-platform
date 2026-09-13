@@ -59,46 +59,49 @@ export default async function HomePage() {
   return (
     <div className="space-y-10">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/40 border border-slate-800 p-8 sm:p-10 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0e121d] via-[#101322] to-[#0d1624] border border-white/[0.08] p-8 sm:p-10 shadow-2xl relative">
+        {/* Subtle decorative glow orb behind text */}
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
         <div className="relative z-10 max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Master Object-Oriented & Low-Level Design</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-violet-500/15 to-cyan-500/15 border border-violet-500/30 text-violet-300 text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Object-Oriented Design & Architecture Studio</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-            Practice Real-World LLD with{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
-              Explainable AI Feedback
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Master Real-World LLD with{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400">
+              Explainable AI Rubrics
             </span>
           </h1>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
-            Choose a problem, author a structured design, and receive structured, explainable AI feedback
-            against a consistent 8-criterion LLD rubric with cited evidence, concrete trade-off analysis,
-            and iterative attempt comparisons.
+            Author structured object models, define SOLID boundaries, and receive deterministic & AI-driven rubric feedback
+            with cited code evidence, trade-off depth, and iterative attempt comparisons.
           </p>
 
           {/* 5-Step Loop Visual Pills */}
-          <div className="pt-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className="px-3 py-1 rounded-lg bg-slate-800/90 text-slate-300 border border-slate-750 font-medium flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-blue-400" /> 1. Choose Problem
+          <div className="pt-3 flex flex-wrap items-center gap-2 text-xs">
+            <span className="px-3 py-1 rounded-xl bg-slate-900/90 text-slate-300 border border-white/[0.08] font-medium flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-violet-400" /> 1. Problem Spec
             </span>
             <span className="text-slate-600">→</span>
-            <span className="px-3 py-1 rounded-lg bg-slate-800/90 text-slate-300 border border-slate-750 font-medium flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-indigo-400" /> 2. Design Architecture
+            <span className="px-3 py-1 rounded-xl bg-slate-900/90 text-slate-300 border border-white/[0.08] font-medium flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-cyan-400" /> 2. Model & Contracts
             </span>
             <span className="text-slate-600">→</span>
-            <span className="px-3 py-1 rounded-lg bg-slate-800/90 text-slate-300 border border-slate-750 font-medium flex items-center gap-1.5">
+            <span className="px-3 py-1 rounded-xl bg-slate-900/90 text-slate-300 border border-white/[0.08] font-medium flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-amber-400" /> 3. Submit
             </span>
             <span className="text-slate-600">→</span>
-            <span className="px-3 py-1 rounded-lg bg-slate-800/90 text-slate-300 border border-slate-750 font-medium flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> 4. Explainable Rubric
+            <span className="px-3 py-1 rounded-xl bg-slate-900/90 text-slate-300 border border-white/[0.08] font-medium flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> 4. 8-Criterion Feedback
             </span>
             <span className="text-slate-600">→</span>
-            <span className="px-3 py-1 rounded-lg bg-slate-800/90 text-slate-300 border border-slate-750 font-medium flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-rose-400" /> 5. Compare & Improve
+            <span className="px-3 py-1 rounded-xl bg-slate-900/90 text-slate-300 border border-white/[0.08] font-medium flex items-center gap-1.5">
+              <Target className="w-3.5 h-3.5 text-rose-400" /> 5. Compare & Evolve
             </span>
           </div>
         </div>
@@ -107,22 +110,24 @@ export default async function HomePage() {
       {/* Problem Grid Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-100 tracking-tight flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-blue-400" />
+          <h2 className="text-xl font-bold text-slate-100 tracking-tight flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400">
+              <BookOpen className="w-3.5 h-3.5" />
+            </div>
             Curated LLD Problem Library
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            4 foundational system design problems seeded for deliberate practice.
+            4 foundational system design problems seeded for deliberate object-oriented practice.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link
             href="/history"
-            className="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-750 text-slate-200 border border-slate-700/60 transition-colors flex items-center gap-1.5"
+            className="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 text-slate-200 border border-white/[0.1] hover:border-violet-500/30 transition-all flex items-center gap-1.5"
           >
-            <span>View Previous Attempts</span>
-            <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+            <span>Learning History</span>
+            <ArrowRight className="w-3.5 h-3.5 text-violet-400" />
           </Link>
         </div>
       </div>

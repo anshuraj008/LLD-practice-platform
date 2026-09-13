@@ -27,13 +27,13 @@ export function RubricCard({
   const isMedium = score === 3;
 
   return (
-    <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 sm:p-6 space-y-4 shadow-lg hover:border-slate-700 transition-colors">
+    <div className="rounded-2xl bg-[#0c0f1a]/85 backdrop-blur-md border border-white/[0.08] p-5 sm:p-6 space-y-4 shadow-xl hover:border-violet-500/30 transition-all">
       {/* Header: Title, Weight & Score */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/[0.08]">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-bold text-slate-100">{name}</h4>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+            <h4 className="text-sm font-bold text-slate-100 tracking-tight">{name}</h4>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/[0.05] text-slate-300 border border-white/[0.08] font-mono">
               {(weight * 100).toFixed(0)}% Weight
             </span>
           </div>
@@ -47,10 +47,10 @@ export function RubricCard({
                 className={`w-3 h-3 rounded-full ${
                   star <= score
                     ? isHigh
-                      ? 'bg-emerald-400'
+                      ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
                       : isMedium
-                      ? 'bg-blue-400'
-                      : 'bg-amber-400'
+                      ? 'bg-violet-400 shadow-sm shadow-violet-400/50'
+                      : 'bg-amber-400 shadow-sm shadow-amber-400/50'
                     : 'bg-slate-800'
                 }`}
               />
@@ -60,10 +60,10 @@ export function RubricCard({
           <div
             className={`px-3 py-1 rounded-xl font-mono text-xs font-bold border ${
               isHigh
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25'
                 : isMedium
-                ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                ? 'bg-violet-500/10 text-violet-300 border-violet-500/25'
+                : 'bg-amber-500/10 text-amber-300 border-amber-500/25'
             }`}
           >
             {score} / 5
@@ -75,14 +75,14 @@ export function RubricCard({
       {evidence.length > 0 && (
         <div className="space-y-1.5">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Quote className="w-3 h-3 text-blue-400" />
+            <Quote className="w-3 h-3 text-cyan-400" />
             Cited Submission Evidence
           </span>
           <div className="flex flex-wrap gap-2">
             {evidence.map((quote, idx) => (
               <div
                 key={idx}
-                className="px-3 py-2 rounded-xl bg-slate-950/70 border border-slate-800 text-xs font-mono text-slate-300 leading-relaxed italic"
+                className="px-3 py-2 rounded-xl bg-[#07090f] border border-white/[0.08] text-xs font-mono text-slate-300 leading-relaxed italic"
               >
                 &ldquo;{quote}&rdquo;
               </div>
@@ -113,9 +113,9 @@ export function RubricCard({
         </div>
 
         {/* Suggestion */}
-        <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/15 space-y-1.5">
-          <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
-            <Lightbulb className="w-3.5 h-3.5" />
+        <div className="p-3.5 rounded-xl bg-violet-500/5 border border-violet-500/15 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-violet-300 uppercase tracking-wider">
+            <Lightbulb className="w-3.5 h-3.5 text-violet-400" />
             <span>Suggestion</span>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed">{suggestion}</p>

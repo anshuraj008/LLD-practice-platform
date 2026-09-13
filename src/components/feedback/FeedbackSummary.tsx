@@ -27,8 +27,11 @@ export function FeedbackSummary({
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 p-6 sm:p-8 shadow-2xl space-y-6">
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
+    <div className="rounded-3xl bg-gradient-to-br from-[#0c0f1a] via-[#0f1322] to-[#0a0d16] border border-white/[0.08] p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+      {/* Background ambient lighting */}
+      <div className="absolute top-0 right-10 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
         {/* Radial Score Gauge */}
         <div className="flex flex-col items-center flex-shrink-0">
           <div className="relative w-32 h-32 flex items-center justify-center">
@@ -37,7 +40,7 @@ export function FeedbackSummary({
                 cx="48"
                 cy="48"
                 r={radius}
-                className="stroke-slate-800"
+                className="stroke-slate-800/80"
                 strokeWidth="8"
                 fill="none"
               />
@@ -61,25 +64,25 @@ export function FeedbackSummary({
             </div>
           </div>
 
-            <div className="mt-2 text-[11px] font-medium text-slate-400 text-center">
-              {!hasScore
-                ? 'Evaluation score unavailable'
-                : score >= 85
-              ? '🌟 Production Ready'
+          <div className="mt-2 text-[11px] font-semibold text-slate-300 text-center">
+            {!hasScore
+              ? 'Evaluation score unavailable'
+              : score >= 85
+              ? '✨ Production Ready'
               : score >= 70
-              ? '👍 Solid Architecture'
-              : '⚡ Needs Refinement'}
+              ? '⚡ Solid Architecture'
+              : '🔧 Needs Refinement'}
           </div>
         </div>
 
         {/* Executive Summary */}
         <div className="flex-1 space-y-3 text-center md:text-left">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Architecture Evaluation
+            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-gradient-to-r from-violet-500/15 to-cyan-500/15 text-violet-300 border border-violet-500/25 flex items-center gap-1.5">
+              <Sparkles className="w-3 h-3 text-cyan-400" /> Architectural Rubric
             </span>
             <span className="text-[11px] text-slate-400">
-              Evaluator: <span className="font-mono text-slate-300">{evaluatorKind}</span>
+              Evaluator: <span className="font-mono text-slate-300 px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">{evaluatorKind}</span>
             </span>
           </div>
 
@@ -90,7 +93,7 @@ export function FeedbackSummary({
       </div>
 
       {/* Strengths & Next Attempt Focus Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-800/80">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/[0.08] relative z-10">
         {/* Key Strengths */}
         <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 uppercase tracking-wider">
@@ -112,16 +115,16 @@ export function FeedbackSummary({
         </div>
 
         {/* Next Attempt Focus */}
-        <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/20 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-blue-400 uppercase tracking-wider">
-            <Target className="w-4 h-4" />
+        <div className="p-4 rounded-2xl bg-violet-500/5 border border-violet-500/20 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-violet-300 uppercase tracking-wider">
+            <Target className="w-4 h-4 text-violet-400" />
             <span>Next Attempt Focus Areas</span>
           </div>
           <ul className="space-y-1.5">
             {nextAttemptFocus.length > 0 ? (
               nextAttemptFocus.map((focus, idx) => (
                 <li key={idx} className="text-xs text-slate-300 flex items-start gap-2">
-                  <span className="text-blue-400 font-bold mt-0.5">•</span>
+                  <span className="text-violet-400 font-bold mt-0.5">•</span>
                   <span>{focus}</span>
                 </li>
               ))

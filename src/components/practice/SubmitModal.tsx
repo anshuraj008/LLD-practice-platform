@@ -71,40 +71,40 @@ export function SubmitModal({
   const remainingRequirements = checks.filter((c) => !c.passed).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="relative w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150">
+      <div className="relative w-full max-w-lg rounded-3xl bg-[#0e121e] border border-white/[0.1] shadow-2xl p-6 sm:p-7 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-violet-500/15 border border-violet-500/25 text-violet-400 flex items-center justify-center">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Pre-Submission Quality Check</h3>
+              <h3 className="text-base font-bold text-white tracking-tight">Pre-Submission Quality Check</h3>
               <p className="text-xs text-slate-400">Verifying design completeness before snapshot</p>
             </div>
           </div>
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-slate-400 hover:text-slate-200 p-1.5 rounded-xl hover:bg-white/[0.06] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Completeness Checklist */}
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {checks.map((c, idx) => (
             <div
               key={idx}
-              className={`flex items-center justify-between p-2.5 rounded-xl border text-xs ${
+              className={`flex items-center justify-between p-3 rounded-xl border text-xs transition-colors ${
                 c.passed
-                  ? 'bg-slate-950/50 border-slate-800/80 text-slate-200'
-                  : 'bg-rose-500/5 border-rose-500/20 text-rose-300'
+                  ? 'bg-[#07090f]/80 border-white/[0.06] text-slate-200'
+                  : 'bg-rose-500/10 border-rose-500/25 text-rose-300'
               }`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 {c.passed ? (
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 ) : (
@@ -112,14 +112,14 @@ export function SubmitModal({
                 )}
                 <span className="font-medium">{c.label}</span>
               </div>
-              <span className="text-[11px] text-slate-400">{c.detail}</span>
+              <span className="text-[11px] text-slate-400 font-mono">{c.detail}</span>
             </div>
           ))}
         </div>
 
         {/* Hard submission gate */}
         {hasCriticalFailure && (
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-2.5 text-xs text-amber-300">
+          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-2.5 text-xs text-amber-300">
             <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <p>
               Complete {remainingRequirements} remaining requirement{remainingRequirements === 1 ? '' : 's'} before evaluation.
@@ -134,12 +134,12 @@ export function SubmitModal({
         </p>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-end gap-3 pt-2">
+        <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/[0.06]">
           <button
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+            className="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-white/[0.04] transition-colors"
           >
             Back to Editor
           </button>
@@ -148,7 +148,7 @@ export function SubmitModal({
             type="button"
             onClick={onConfirm}
             disabled={isSubmitting || hasCriticalFailure}
-            className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:pointer-events-none text-white font-semibold text-xs flex items-center gap-2 shadow-md shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-40 disabled:pointer-events-none text-white font-semibold text-xs flex items-center gap-2 shadow-lg shadow-violet-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             {isSubmitting ? (
               <>
@@ -157,8 +157,8 @@ export function SubmitModal({
               </>
             ) : (
               <>
-                <Send className="w-4 h-4" />
-                <span>Confirm & Submit for Evaluation</span>
+                <Send className="w-3.5 h-3.5" />
+                <span>Confirm & Submit Solution</span>
               </>
             )}
           </button>

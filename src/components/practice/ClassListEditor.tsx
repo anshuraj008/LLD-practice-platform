@@ -51,7 +51,7 @@ export function ClassListEditor({ classes, onChange, disabled }: ClassListEditor
       {/* Existing Classes List */}
       <div className="space-y-3">
         {classes.length === 0 ? (
-          <div className="p-6 rounded-xl border border-dashed border-slate-800 bg-slate-900/40 text-center space-y-2">
+          <div className="p-6 rounded-xl border border-dashed border-white/[0.1] bg-[#07090f]/60 text-center space-y-2">
             <Box className="w-8 h-8 text-slate-600 mx-auto" />
             <p className="text-xs font-semibold text-slate-400">No classes defined yet</p>
             <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
@@ -62,11 +62,11 @@ export function ClassListEditor({ classes, onChange, disabled }: ClassListEditor
           classes.map((cls, idx) => (
             <div
               key={idx}
-              className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800/90 hover:border-slate-750 transition-colors space-y-2"
+              className="p-3.5 rounded-xl bg-[#07090f]/90 border border-white/[0.08] hover:border-cyan-500/30 transition-all space-y-2"
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 flex-1">
-                  <div className="w-5 h-5 rounded bg-blue-500/10 text-blue-400 flex items-center justify-center font-mono text-[10px] font-bold">
+                  <div className="w-5 h-5 rounded bg-cyan-500/15 text-cyan-300 flex items-center justify-center font-mono text-[10px] font-bold border border-cyan-500/25">
                     C
                   </div>
                   <input
@@ -75,7 +75,7 @@ export function ClassListEditor({ classes, onChange, disabled }: ClassListEditor
                     disabled={disabled}
                     onChange={(e) => handleUpdateItem(idx, 'name', e.target.value)}
                     placeholder="e.g. ParkingLot, SpotAssignmentStrategy"
-                    className="bg-transparent text-xs font-bold text-slate-100 placeholder-slate-600 focus:outline-none border-b border-transparent focus:border-blue-500 px-1 py-0.5 w-full"
+                    className="bg-transparent text-xs font-bold text-slate-100 placeholder-slate-600 focus:outline-none border-b border-transparent focus:border-cyan-400 px-1 py-0.5 w-full font-mono"
                   />
                 </div>
                 {!disabled && (
@@ -96,7 +96,7 @@ export function ClassListEditor({ classes, onChange, disabled }: ClassListEditor
                 onChange={(e) => handleUpdateItem(idx, 'responsibility', e.target.value)}
                 placeholder="Describe single responsibility (e.g. Manages parking spot state, allocates nearest empty spot matching vehicle dimensions)"
                 rows={2}
-                className="w-full text-xs text-slate-300 bg-slate-950/60 rounded-lg border border-slate-800/80 p-2 placeholder-slate-600 focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/40 resize-none leading-relaxed"
+                className="w-full text-xs text-slate-300 bg-slate-950/60 rounded-lg border border-white/[0.06] p-2.5 placeholder-slate-600 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/30 resize-none leading-relaxed"
               />
             </div>
           ))
@@ -105,9 +105,9 @@ export function ClassListEditor({ classes, onChange, disabled }: ClassListEditor
 
       {/* Add Class Form */}
       {!disabled && (
-        <form onSubmit={handleAddClass} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+        <form onSubmit={handleAddClass} className="p-4 rounded-xl bg-[#090b14]/90 border border-white/[0.08] space-y-3">
           <div className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-            <Plus className="w-3.5 h-3.5 text-blue-400" />
+            <Plus className="w-3.5 h-3.5 text-cyan-400" />
             <span>Add New Class / Interface</span>
           </div>
 
@@ -116,15 +116,15 @@ export function ClassListEditor({ classes, onChange, disabled }: ClassListEditor
               type="text"
               value={newClassName}
               onChange={(e) => setNewClassName(e.target.value)}
-              placeholder="Class or Interface Name (e.g., GateController)"
-              className="w-full text-xs bg-slate-950 text-slate-100 rounded-lg border border-slate-800 p-2.5 placeholder-slate-600 focus:outline-none focus:border-blue-500 font-mono"
+              placeholder="Class or Interface Name (e.g., GateController, PricingStrategy)"
+              className="w-full text-xs bg-[#07090f] text-slate-100 rounded-lg border border-white/[0.08] p-2.5 placeholder-slate-600 focus:outline-none focus:border-cyan-400 font-mono"
             />
             <textarea
               value={newClassResp}
               onChange={(e) => setNewClassResp(e.target.value)}
               placeholder="Core responsibility statement (SRP adherence)"
               rows={2}
-              className="w-full text-xs bg-slate-950 text-slate-100 rounded-lg border border-slate-800 p-2.5 placeholder-slate-600 focus:outline-none focus:border-blue-500 resize-none"
+              className="w-full text-xs bg-[#07090f] text-slate-100 rounded-lg border border-white/[0.08] p-2.5 placeholder-slate-600 focus:outline-none focus:border-cyan-400 resize-none"
             />
           </div>
 
@@ -132,7 +132,7 @@ export function ClassListEditor({ classes, onChange, disabled }: ClassListEditor
             <button
               type="submit"
               disabled={!newClassName.trim() || !newClassResp.trim()}
-              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:pointer-events-none text-white font-medium text-xs flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-40 disabled:pointer-events-none text-white font-semibold text-xs flex items-center gap-1.5 shadow-md shadow-violet-600/20 transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Class</span>

@@ -43,62 +43,67 @@ export function getDifficultyColor(difficulty: string): { bg: string; text: stri
     case 'EASY':
       return {
         bg: 'bg-emerald-500/10 dark:bg-emerald-500/15',
-        text: 'text-emerald-600 dark:text-emerald-400',
-        border: 'border-emerald-500/30',
+        text: 'text-emerald-400',
+        border: 'border-emerald-500/25',
       };
     case 'MEDIUM':
       return {
         bg: 'bg-amber-500/10 dark:bg-amber-500/15',
-        text: 'text-amber-600 dark:text-amber-400',
-        border: 'border-amber-500/30',
+        text: 'text-amber-400',
+        border: 'border-amber-500/25',
       };
     case 'HARD':
       return {
         bg: 'bg-rose-500/10 dark:bg-rose-500/15',
-        text: 'text-rose-600 dark:text-rose-400',
-        border: 'border-rose-500/30',
+        text: 'text-rose-400',
+        border: 'border-rose-500/25',
       };
     default:
       return {
         bg: 'bg-slate-500/10',
-        text: 'text-slate-600 dark:text-slate-400',
-        border: 'border-slate-500/30',
+        text: 'text-slate-400',
+        border: 'border-slate-500/25',
       };
   }
 }
 
-export function getScoreColor(score: number | null | undefined): { ring: string; text: string; badge: string } {
+export function getScoreColor(score: number | null | undefined): { ring: string; text: string; badge: string; glow: string } {
   if (score === null || score === undefined) {
     return {
-      ring: 'stroke-slate-600',
+      ring: 'stroke-slate-700',
       text: 'text-slate-400',
-      badge: 'bg-slate-800 text-slate-300 border-slate-700',
+      badge: 'bg-slate-800/80 text-slate-300 border-slate-700/60',
+      glow: '',
     };
   }
   if (score >= 85) {
     return {
-      ring: 'stroke-emerald-500',
+      ring: 'stroke-emerald-400',
       text: 'text-emerald-400',
-      badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+      badge: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
+      glow: 'shadow-emerald-500/20',
     };
   }
   if (score >= 70) {
     return {
-      ring: 'stroke-blue-500',
-      text: 'text-blue-400',
-      badge: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
+      ring: 'stroke-violet-400',
+      text: 'text-violet-300',
+      badge: 'bg-violet-500/10 text-violet-300 border-violet-500/30',
+      glow: 'shadow-violet-500/20',
     };
   }
   if (score >= 50) {
     return {
-      ring: 'stroke-amber-500',
+      ring: 'stroke-amber-400',
       text: 'text-amber-400',
-      badge: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+      badge: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
+      glow: 'shadow-amber-500/20',
     };
   }
   return {
-    ring: 'stroke-rose-500',
+    ring: 'stroke-rose-400',
     text: 'text-rose-400',
-    badge: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
+    badge: 'bg-rose-500/10 text-rose-300 border-rose-500/30',
+    glow: 'shadow-rose-500/20',
   };
 }

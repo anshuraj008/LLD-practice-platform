@@ -92,18 +92,21 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
   return (
     <div className="space-y-8">
       {/* Header & Stats Banner */}
-      <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="rounded-3xl bg-[#0c0f1a]/85 backdrop-blur-md border border-white/[0.08] p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+        {/* Glow */}
+        <div className="absolute top-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/15 border border-violet-500/25 text-violet-300 text-xs font-semibold mb-2">
               <History className="w-3.5 h-3.5" />
-              <span>Learner Practice Journey</span>
+              <span>Learner Journey & Iteration Delta</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Learning History & Score Trends
             </h1>
             <p className="text-xs text-slate-400 mt-1">
-              Tracking Low-Level Design iterations, score progressions, and architectural improvement for {userName}.
+              Tracking Object-Oriented Design iterations, score progressions, and architectural improvement for {userName}.
             </p>
           </div>
 
@@ -111,7 +114,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
             <button
               onClick={handleCompare}
               disabled={!canCompare}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:pointer-events-none text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-40 disabled:pointer-events-none text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-violet-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <GitCompare className="w-4 h-4" />
               <span>{canCompare ? 'Compare 2 Selected Attempts' : 'Complete both evaluations first'}</span>
@@ -120,24 +123,24 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
         </div>
 
         {/* 4 Stat Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 relative z-10">
+          <div className="p-4 rounded-2xl bg-[#07090f]/80 border border-white/[0.06] space-y-1">
             <span className="text-[11px] font-medium text-slate-400">Total Attempts</span>
             <p className="text-2xl font-black text-white">{initialHistory.totalAttempts}</p>
           </div>
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+          <div className="p-4 rounded-2xl bg-[#07090f]/80 border border-white/[0.06] space-y-1">
             <span className="text-[11px] font-medium text-slate-400">Completed Reviews</span>
-            <p className="text-2xl font-black text-blue-400">
+            <p className="text-2xl font-black text-violet-300">
               {initialHistory.completedSubmissions}
             </p>
           </div>
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+          <div className="p-4 rounded-2xl bg-[#07090f]/80 border border-white/[0.06] space-y-1">
             <span className="text-[11px] font-medium text-slate-400">Average Score</span>
             <p className="text-2xl font-black text-emerald-400">
               {initialHistory.averageScore === null ? 'N/A' : `${initialHistory.averageScore}%`}
             </p>
           </div>
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+          <div className="p-4 rounded-2xl bg-[#07090f]/80 border border-white/[0.06] space-y-1">
             <span className="text-[11px] font-medium text-slate-400">Highest Score</span>
             <p className="text-2xl font-black text-amber-400">
               {initialHistory.highestScore === null ? 'N/A' : `${initialHistory.highestScore}%`}
@@ -148,7 +151,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
 
       {/* Recurring Weaknesses Panel */}
       {initialHistory.recurringWeaknesses.length > 0 && (
-        <div className="rounded-2xl bg-slate-900/70 border border-slate-800 p-6 space-y-4 shadow-lg">
+        <div className="rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] p-6 space-y-4 shadow-xl">
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-amber-400" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
@@ -163,7 +166,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
             {initialHistory.recurringWeaknesses.map((w) => (
               <div
                 key={w.criterionId}
-                className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2"
+                className="p-4 rounded-xl bg-[#07090f]/80 border border-white/[0.06] space-y-2"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-200">{w.criterionName}</span>
@@ -185,8 +188,10 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
       {/* Attempts Timeline List */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-            <Layers className="w-5 h-5 text-blue-400" />
+          <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400">
+              <Layers className="w-3.5 h-3.5" />
+            </div>
             Attempt History Timeline
           </h3>
           <span className="text-xs text-slate-400">
@@ -195,7 +200,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
         </div>
 
         {initialHistory.attempts.length === 0 ? (
-          <div className="p-12 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-3">
+          <div className="p-12 rounded-2xl bg-[#0c0f1a]/85 border border-white/[0.08] text-center space-y-3">
             <Box className="w-10 h-10 text-slate-600 mx-auto" />
             <h4 className="text-sm font-bold text-slate-300">No attempts recorded yet</h4>
             <p className="text-xs text-slate-400 max-w-sm mx-auto">
@@ -203,7 +208,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs font-semibold shadow-md shadow-violet-600/20"
             >
               <span>Explore Problems</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -224,8 +229,8 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
                   key={att.attemptId}
                   className={`p-5 rounded-2xl border transition-all ${
                     isSelected
-                      ? 'bg-blue-950/30 border-blue-500/60 shadow-lg shadow-blue-950/20'
-                      : 'bg-slate-900/90 border-slate-800 hover:border-slate-750'
+                      ? 'bg-violet-950/30 border-violet-500/60 shadow-xl shadow-violet-950/30'
+                      : 'bg-[#0c0f1a]/85 backdrop-blur-md border-white/[0.08] hover:border-violet-500/30'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -236,7 +241,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
                         checked={isSelected}
                         disabled={att.status !== 'SUBMITTED' || att.evaluationStatus !== 'COMPLETED'}
                         onChange={() => handleToggleSelect(att.attemptId)}
-                        className="mt-1 w-4 h-4 rounded bg-slate-950 border-slate-700 text-blue-600 focus:ring-blue-500 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                        className="mt-1 w-4 h-4 rounded bg-slate-950 border-white/[0.15] text-violet-600 focus:ring-violet-500 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 accent-violet-600"
                         title={
                           att.status === 'SUBMITTED' && att.evaluationStatus === 'COMPLETED'
                             ? 'Select for comparison'
@@ -294,11 +299,11 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
                             )}
                         </div>
                       ) : evaluationStatus === 'QUEUED' ? (
-                        <span className="text-xs font-medium text-blue-400 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                        <span className="text-xs font-medium text-violet-300 px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20">
                           Evaluation Queued
                         </span>
                       ) : evaluationStatus === 'EVALUATING' ? (
-                        <span className="text-xs font-medium text-blue-400 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center gap-1.5">
+                        <span className="text-xs font-medium text-violet-300 px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center gap-1.5">
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
                           Evaluating...
                         </span>
@@ -311,7 +316,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
                       {isDraft ? (
                         <Link
                           href={`/attempts/${att.attemptId}`}
-                          className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-xs font-semibold text-slate-200 hover:text-white border border-slate-700 transition-colors flex items-center gap-1"
+                          className="px-3.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-xs font-semibold text-slate-200 hover:text-white border border-white/[0.08] transition-all flex items-center gap-1"
                         >
                           <span>Resume Draft</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -329,7 +334,7 @@ export function HistoryClient({ initialHistory, userName }: HistoryClientProps) 
                       ) : (
                         <Link
                           href={`/attempts/${att.attemptId}/feedback`}
-                          className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-xs font-semibold text-slate-200 hover:text-white border border-slate-700 transition-colors flex items-center gap-1"
+                          className="px-3.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-xs font-semibold text-slate-200 hover:text-white border border-white/[0.08] hover:border-violet-500/30 transition-all flex items-center gap-1"
                         >
                           <span>{evaluationStatus === 'COMPLETED' ? 'View Feedback' : 'View Evaluation'}</span>
                           <ArrowRight className="w-3.5 h-3.5" />

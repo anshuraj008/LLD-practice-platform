@@ -58,8 +58,10 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
       </Link>
 
       {/* Header Info */}
-      <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 sm:p-8 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="rounded-3xl bg-[#0c0f1a]/85 backdrop-blur-md border border-white/[0.08] p-6 sm:p-8 space-y-4 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-10 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span
               className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors.bg} ${diffColors.text} ${diffColors.border}`}
@@ -76,7 +78,7 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
             {tags.map((tag, idx) => (
               <span
                 key={idx}
-                className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700"
+                className="text-[11px] px-2.5 py-0.5 rounded-lg bg-white/[0.04] text-slate-300 border border-white/[0.06] font-mono"
               >
                 #{tag}
               </span>
@@ -84,14 +86,14 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
           </div>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight relative z-10">
           {problem.title}
         </h1>
 
-        <p className="text-sm text-slate-300 leading-relaxed">{problem.description}</p>
+        <p className="text-sm text-slate-300 leading-relaxed relative z-10">{problem.description}</p>
 
         {/* Start / Continue Button Action */}
-        <div className="pt-4 flex flex-wrap items-center gap-4">
+        <div className="pt-4 flex flex-wrap items-center gap-4 relative z-10">
           <form
             action={async () => {
               'use server';
@@ -104,10 +106,10 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
           >
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-lg shadow-blue-600/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-violet-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Play className="w-4 h-4 fill-white" />
-              {activeDraft ? 'Continue Working on Draft' : 'Start Practice Attempt'}
+              {activeDraft ? 'Continue Working on Draft' : 'Open Design Studio'}
             </button>
           </form>
 
@@ -124,7 +126,7 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
             >
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 hover:text-white font-medium text-xs border border-slate-700 transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-750 text-slate-300 hover:text-white font-medium text-xs border border-white/[0.08] transition-colors"
               >
                 <span>Discard Draft & Start Fresh</span>
               </button>
@@ -134,9 +136,11 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
       </div>
 
       {/* Requirements Section */}
-      <div className="rounded-2xl bg-slate-900/70 border border-slate-800 p-6 sm:p-8 space-y-6">
-        <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-          <Layers className="w-5 h-5 text-blue-400" />
+      <div className="rounded-3xl bg-[#0c0f1a]/85 backdrop-blur-md border border-white/[0.08] p-6 sm:p-8 space-y-6 shadow-xl">
+        <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2.5">
+          <div className="w-6 h-6 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <Layers className="w-3.5 h-3.5" />
+          </div>
           System Requirements & Constraints
         </h2>
 
@@ -148,12 +152,12 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
             return (
               <div
                 key={req.id || idx}
-                className={`p-4 rounded-xl border flex items-start gap-3 ${
+                className={`p-4 rounded-xl border flex items-start gap-3 transition-colors ${
                   isConstraint
                     ? 'bg-rose-500/5 border-rose-500/20'
                     : isNonFunctional
                     ? 'bg-amber-500/5 border-amber-500/20'
-                    : 'bg-slate-800/40 border-slate-800'
+                    : 'bg-[#07090f]/80 border-white/[0.06]'
                 }`}
               >
                 <div className="mt-0.5">
@@ -162,7 +166,7 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
                   ) : isNonFunctional ? (
                     <AlertCircle className="w-4 h-4 text-amber-400" />
                   ) : (
-                    <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                    <CheckCircle2 className="w-4 h-4 text-cyan-400" />
                   )}
                 </div>
                 <div className="space-y-0.5">
@@ -172,7 +176,7 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
                         ? 'text-rose-400'
                         : isNonFunctional
                         ? 'text-amber-400'
-                        : 'text-blue-400'
+                        : 'text-cyan-400'
                     }`}
                   >
                     {req.category}
@@ -188,10 +192,12 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
       </div>
 
       {/* Rubric Criteria Preview */}
-      <div className="rounded-2xl bg-slate-900/70 border border-slate-800 p-6 sm:p-8 space-y-6">
+      <div className="rounded-3xl bg-[#0c0f1a]/85 backdrop-blur-md border border-white/[0.08] p-6 sm:p-8 space-y-6 shadow-xl">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-            <Award className="w-5 h-5 text-amber-400" />
+          <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <Award className="w-3.5 h-3.5" />
+            </div>
             Evaluation Rubric Preview
           </h2>
           <span className="text-xs text-slate-400 font-medium">
@@ -208,11 +214,11 @@ export default async function ProblemDetailPage({ params }: ProblemPageProps) {
           {criteria.map((c: any) => (
             <div
               key={c.id}
-              className="p-3.5 rounded-xl bg-slate-800/50 border border-slate-750/70 flex flex-col justify-between gap-2"
+              className="p-4 rounded-xl bg-[#07090f]/80 border border-white/[0.06] flex flex-col justify-between gap-2 hover:border-violet-500/30 transition-all"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-200">{c.name}</span>
-                <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/25 font-mono">
                   {(c.weight * 100).toFixed(0)}% Weight
                 </span>
               </div>

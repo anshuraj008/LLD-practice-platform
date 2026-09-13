@@ -124,27 +124,27 @@ export function EvaluationFeedbackClient({
                   }
                 });
             }}
-            className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-blue-600/25 transition-all"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-violet-600/25 transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span>Try Again (New Attempt)</span>
+            <span>Practice Again (New Attempt)</span>
           </button>
         </div>
       </div>
 
       {/* State 1 & 2: QUEUED or EVALUATING */}
       {(status === 'QUEUED' || status === 'EVALUATING') && (
-        <div className="p-10 rounded-3xl bg-slate-900/90 border border-slate-800 text-center space-y-6 shadow-2xl">
+        <div className="p-10 rounded-3xl bg-[#0c0f1a]/90 backdrop-blur-md border border-white/[0.08] text-center space-y-6 shadow-2xl">
           <div className="relative w-16 h-16 mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping" />
-            <div className="relative w-14 h-14 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
+            <div className="absolute inset-0 rounded-full bg-violet-500/20 animate-ping" />
+            <div className="relative w-14 h-14 rounded-full bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-400">
               <Loader2 className="w-7 h-7 animate-spin" />
             </div>
           </div>
 
           <div className="max-w-md mx-auto space-y-2">
             <h2 className="text-xl font-bold text-white tracking-tight">
-              {status === 'QUEUED' ? 'Evaluation Queued' : 'Analyzing Low-Level Design Architecture...'}
+              {status === 'QUEUED' ? 'Evaluation Queued' : 'Analyzing Object-Oriented Architecture...'}
             </h2>
             <p className="text-xs text-slate-400 leading-relaxed">
               Evaluating Single Responsibility Principle, decoupling, class contracts, trade-offs, and
@@ -153,7 +153,7 @@ export function EvaluationFeedbackClient({
           </div>
 
           <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400 font-mono">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
             <span>Live status: {status}</span>
           </div>
         </div>

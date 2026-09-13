@@ -138,7 +138,26 @@ Use the Persona Switcher in the top right of the navigation header:
 - **Asynchronous Execution**: Submissions return immediately (`status = QUEUED`), and evaluation runs in the background. The client polls every 2.5s until completion.
 - **Safe Failure & Retry**: If the AI evaluation times out or encounters invalid JSON, the evaluation transitions to `FAILED` with a safe error message. The submission snapshot is never lost, and the learner can click **Retry Evaluation** (capped at 3 retries).
 - **Idempotency Guard**: All submissions require a unique `Idempotency-Key` to prevent duplicate submissions on double-clicks or unstable networks.
-- **Prompt Injection Defense**: Learner input is isolated inside `<learner_submission>` XML delimiters with explicit instructions to ignore prompt injection attempts.
+---
+
+## 🌐 Deploy to Vercel
+
+The platform is fully optimized for zero-config deployment to **Vercel**:
+
+### Option 1: Import via Vercel Dashboard
+1. Push your code to GitHub / GitLab / Bitbucket.
+2. In the [Vercel Dashboard](https://vercel.com/new), select **Add New Project** and import your repository.
+3. Framework Preset: **Next.js** (auto-detected).
+4. Environment Variables:
+   - `GEMINI_API_KEY`: *(Optional)* Your Google AI Studio API key. (If omitted, the platform uses deterministic fallback evaluation).
+   - `NODE_ENV`: `production`
+5. Click **Deploy**.
+
+### Option 2: Deploy with Vercel CLI
+```bash
+npm i -g vercel
+vercel
+```
 
 ---
 

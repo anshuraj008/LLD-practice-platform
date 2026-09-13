@@ -4,64 +4,87 @@
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
+    --background: 240 25% 4%;
     --foreground: 210 40% 98%;
-    --card: 217 33% 17%;
+    --card: 240 20% 8%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
+    --popover: 240 25% 5%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 19% 27%;
+    --primary: 263 70% 58%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 18% 15%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217 19% 27%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 19% 27%;
+    --muted: 240 16% 16%;
+    --muted-foreground: 220 15% 65%;
+    --accent: 263 70% 58%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 19% 27%;
-    --input: 217 19% 27%;
-    --ring: 224 76% 48%;
-    --radius: 0.75rem;
+    --border: 240 18% 16%;
+    --input: 240 18% 16%;
+    --ring: 263 70% 58%;
+    --radius: 0.875rem;
   }
 }
 
 body {
-  background-color: #0b0f19;
+  background-color: #07090e;
   color: #f1f5f9;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Ambient glow and subtle architectural blueprint grid */
+.blueprint-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.ambient-aura {
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 85% 15%, rgba(6, 182, 212, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 15% 35%, rgba(99, 102, 241, 0.08), transparent);
+}
+
 /* Custom crisp scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #090a0f;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+  background: #1e2230;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #2e344a;
 }
 
 .glass-panel {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.6);
+  background: rgba(13, 16, 26, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-glow {
+  background: rgba(13, 16, 26, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 0 0 35px -5px rgba(124, 58, 237, 0.12);
 }
 
 .glow-subtle {
-  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 30px -5px rgba(124, 58, 237, 0.18);
 }
 
 .card-excerpt {
@@ -79,3 +102,4 @@ details > summary {
 details > summary::-webkit-details-marker {
   display: none;
 }
+
